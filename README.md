@@ -56,9 +56,9 @@ public class AppDbContext : DbContext
 
 ---
 
-### 3. Add CRUD endpoint registration in `Program.cs`
+### 3. Add CRUD endpoint registration in `CrudEndpointConfig.cs` from `Configuration` folder
 
-Inside `app` build section, pick one of the following:
+Inside `RegisterV1CrudRoutes` section, pick one of the following:
 
 | Operation               | Code snippet                                                                                                |
 | ----------------------- |-------------------------------------------------------------------------------------------------------------|
@@ -67,6 +67,7 @@ Inside `app` build section, pick one of the following:
 | Skip DELETE             | `app.RegisterCrudEndpoints<Customer>("/customers", CrudOps.All & ~CrudOps.Delete);`                         |
 | No endpoints (override) | `app.RegisterCrudEndpoints<Customer>("/customers", CrudOps.None);`                                          |
 
+> You can have multiple method for registering your endpoints based on your versions!
 ---
 
 ### 4. Apply migrations and run
