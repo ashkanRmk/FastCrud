@@ -16,8 +16,6 @@ A .NET 9+, PostgreSQL-based Minimal API starter that provides easy CRUD:
 * **Self-documenting** — `.WithOpenApi()` generates clean Swagger UI automatically
 * **Extensible** — easy to override individual endpoints (example included)
 
-This readme shows how to add **new CRUD steps** and customize per-entity options.
-
 ---
 
 ## 🧱 How to add a new entity with CRUD
@@ -59,12 +57,6 @@ public class AppDbContext : DbContext
 ---
 
 ### 3. Add CRUD endpoint registration in `Program.cs`
-
-Import the registrar:
-
-```csharp
-using CrudMinimalApi.Infrastructure;
-```
 
 Inside `app` build section, pick one of the following:
 
