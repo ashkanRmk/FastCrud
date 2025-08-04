@@ -1,3 +1,4 @@
+using Crud.Generator.Configuration;
 using Crud.Generator.Data;
 using Crud.Generator.Infrastructure;
 using Crud.Generator.Models;
@@ -22,13 +23,7 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-// Full CRUD
-app.RegisterCrudEndpoints<Product>("/products");
-
-// only GET & POST (skip Update, Delete, GetById)
-app.RegisterCrudEndpoints<Customer>("/customers", CrudOps.GetAll | CrudOps.Create);
-
-// exclude DELETE
-// app.RegisterCrudEndpoints<Order>("/orders", CrudOps.All & ~CrudOps.Delete);
+app.RegisterV1CrudRoutes();
+app.RegisterV2CrudRoutes();
 
 app.Run();

@@ -2,30 +2,18 @@ using Crud.Generator.Data;
 
 namespace Crud.Generator.Infrastructure;
 
-[Flags]
-public enum CrudOps
-{
-    None = 0,
-    GetAll = 1 << 0,
-    GetById = 1 << 1,
-    Create = 1 << 2,
-    Update = 1 << 3,
-    Delete = 1 << 4,
-    All = GetAll | GetById | Create | Update | Delete
-}
-
 public static class CrudRegistrar
 {
     public static void RegisterCrudEndpoints<TEntity>(
         this WebApplication app,
-        string routePrefix,
-        CrudOps opsToInclude = CrudOps.All)
+        CrudOps opsToInclude = CrudOps.All,
+        string version = "v1")
         where TEntity : class
     {
-        var cleanRoute = routePrefix.StartsWith("/") ? routePrefix : "/" + routePrefix;
+        var cleanRoute = "/" + typeof(TEntity).Name.ToLower();
 
         var group = app
-            .MapGroup("v1")
+            .MapGroup(version)
             .WithTags(typeof(TEntity).Name);
 
         if (opsToInclude.HasFlag(CrudOps.GetAll))
