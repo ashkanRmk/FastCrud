@@ -24,16 +24,20 @@ public static class CrudRegistrar
     {
         var cleanRoute = routePrefix.StartsWith("/") ? routePrefix : "/" + routePrefix;
 
+        var group = app
+            .MapGroup("v1")
+            .WithTags(typeof(TEntity).Name);
+
         if (opsToInclude.HasFlag(CrudOps.GetAll))
         {
-            app.MapGet(cleanRoute, async (IRepository<TEntity> repo) =>
+            group.MapGet(cleanRoute, async (IRepository<TEntity> repo) =>
                 await repo.GetAllAsync())
                 .WithOpenApi();
         }
 
         if (opsToInclude.HasFlag(CrudOps.GetById))
         {
-            app.MapGet($"{cleanRoute}/{{id:int}}", async (int id, IRepository<TEntity> repo) =>
+            group.MapGet($"{cleanRoute}/{{id:int}}", async (int id, IRepository<TEntity> repo) =>
                 await repo.GetByIdAsync(id) is TEntity entity
                     ? Results.Ok(entity)
                     : Results.NotFound())
@@ -42,14 +46,14 @@ public static class CrudRegistrar
 
         if (opsToInclude.HasFlag(CrudOps.Create))
         {
-            app.MapPost(cleanRoute, async (TEntity dto, IRepository<TEntity> repo) =>
+            group.MapPost(cleanRoute, async (TEntity dto, IRepository<TEntity> repo) =>
                 Results.Created(cleanRoute, await repo.AddAsync(dto)))
                 .WithOpenApi();
         }
 
         if (opsToInclude.HasFlag(CrudOps.Update))
         {
-            app.MapPut($"{cleanRoute}/{{id:int}}", async (int id, TEntity dto, IRepository<TEntity> repo) =>
+            group.MapPut($"{cleanRoute}/{{id:int}}", async (int id, TEntity dto, IRepository<TEntity> repo) =>
                 await repo.UpdateAsync(id, dto) is TEntity updated
                     ? Results.Ok(updated)
                     : Results.NotFound())
@@ -58,7 +62,7 @@ public static class CrudRegistrar
 
         if (opsToInclude.HasFlag(CrudOps.Delete))
         {
-            app.MapDelete($"{cleanRoute}/{{id:int}}", async (int id, IRepository<TEntity> repo) =>
+            group.MapDelete($"{cleanRoute}/{{id:int}}", async (int id, IRepository<TEntity> repo) =>
                 await repo.DeleteAsync(id)
                     ? Results.NoContent()
                     : Results.NotFound())
