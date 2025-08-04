@@ -23,10 +23,9 @@
 
         <PackageReference Include="Swashbuckle.AspNetCore"
                           Version="9.0.3"/>
+
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.3" />
+
     </ItemGroup>
 
-    <ItemGroup>
-        <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet"
-                                Version="9.0.7"/>
-    </ItemGroup>
 </Project>

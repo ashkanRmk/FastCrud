@@ -1,6 +1,8 @@
 using Crud.Generator.Data;
+using Crud.Generator.Infrastructure;
 using Crud.Generator.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,32 +12,23 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+});
 
 var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
 
-// Example: Register CRUD endpoints for Product
-RegisterCrudEndpoints<Product>(app, "/products");
+// Full CRUD
+app.RegisterCrudEndpoints<Product>("/products");
+
+// only GET & POST (skip Update, Delete, GetById)
+app.RegisterCrudEndpoints<Customer>("/customers", CrudOps.GetAll | CrudOps.Create);
+
+// exclude DELETE
+// app.RegisterCrudEndpoints<Order>("/orders", CrudOps.All & ~CrudOps.Delete);
 
 app.Run();
-
-void RegisterCrudEndpoints<TEntity>(WebApplication app, string route) where TEntity : class
-{
-    app.MapGet(route, async (IRepository<TEntity> repo) =>
-        await repo.GetAllAsync());
-
-    app.MapGet($"{route}/{{id:int}}", async (int id, IRepository<TEntity> repo) =>
-        await repo.GetByIdAsync(id) is TEntity entity ? Results.Ok(entity) : Results.NotFound());
-
-    app.MapPost(route, async (TEntity entity, IRepository<TEntity> repo) =>
-        Results.Created($"{route}", await repo.AddAsync(entity)));
-
-    app.MapPut($"{route}/{{id:int}}", async (int id, TEntity entity, IRepository<TEntity> repo) =>
-        await repo.UpdateAsync(id, entity) is TEntity updated ? Results.Ok(updated) : Results.NotFound());
-
-    app.MapDelete($"{route}/{{id:int}}", async (int id, IRepository<TEntity> repo) =>
-        await repo.DeleteAsync(id) ? Results.NoContent() : Results.NotFound());
-}
