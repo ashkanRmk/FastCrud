@@ -86,39 +86,3 @@ dotnet run
 ```
 
 Visit/swagger UI at `https://localhost:5001/swagger`
-
----
-
-## 🚩 Understanding the `CrudOps` flags
-
-These flags determine which HTTP methods are wired for CRUD:
-
-```csharp
-[Flags]
-public enum CrudOps
-{
-  None    = 0,
-  GetAll  = 1 << 0,   // 00001
-  GetById = 1 << 1,   // 00010
-  Create  = 1 << 2,   // 00100
-  Update  = 1 << 3,   // 01000
-  Delete  = 1 << 4,   // 10000
-  All     = GetAll | GetById | Create | Update | Delete
-}
-```
-
-* The `[Flags]` attribute indicates this enum can be used as a **bit set**: combine values with OR (`|`), test with `HasFlag`, invert with `~`, etc. ([Medium][1], [Medium][2], [Microsoft Learn][3], [Stack Overflow][4], [Martin Costello's Blog][5], [Stack Overflow][6])
-* `1 << n` is a C# bit-shift operator that yields `2ⁿ` without manual power-of-two calculations. ([Microsoft Learn][7])
-* For example, `CrudOps.All & ~CrudOps.Delete` includes all ops except DELETE.
-
----
-
-## 🧬 Source of truth: the `CrudRegistrar`
-
-**`Infrastructure/CrudRegistrar.cs`**
-
-* Contains `RegisterCrudEndpoints<TEntity>()` extension
-* Registers routes only if the respective `CrudOps` flag is set
-* Default `CrudOps.All` ensures no behavior change if flags are omitted
-* Automatically applies `.WithOpenApi()` for Swagger documentation
-
