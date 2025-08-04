@@ -1,7 +1,6 @@
 using Crud.Generator.Configuration;
 using Crud.Generator.Data;
 using Crud.Generator.Infrastructure;
-using Crud.Generator.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 

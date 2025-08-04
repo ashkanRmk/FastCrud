@@ -1,4 +1,4 @@
-namespace Crud.Generator.Models;
+namespace Crud.Generator.Entities;
 
 public class Customer
 {

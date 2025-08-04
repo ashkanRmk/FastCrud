@@ -1,4 +1,4 @@
-using Crud.Generator.Models;
+using Crud.Generator.Entities;
 using Crud.Generator.Infrastructure;
 
 namespace Crud.Generator.Configuration;
