@@ -1,12 +1,12 @@
-using Crud.Generator.Abstractions;
-using Crud.Generator.Repositories;
+using FastCrud.Abstractions;
+using FastCrud.Repositories;
 using Gridify;
 using Gridify.EntityFramework;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using SharpGrip.FluentValidation.AutoValidation.Endpoints.Extensions;
 
-namespace Crud.Generator.Crud;
+namespace FastCrud.Infrastructure;
 
 public static class CrudEndpointExtensions
 {

@@ -1,9 +1,9 @@
-using Crud.Generator.Crud;
-using Crud.Generator.Data;
-using Crud.Generator.Dtos;
-using Crud.Generator.Entities;
-using Crud.Generator.Repositories;
-using Crud.Generator.Validations;
+using FastCrud.Data;
+using FastCrud.Dtos;
+using FastCrud.Entities;
+using FastCrud.Infrastructure;
+using FastCrud.Repositories;
+using FastCrud.Validations;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using SharpGrip.FluentValidation.AutoValidation.Endpoints.Extensions;

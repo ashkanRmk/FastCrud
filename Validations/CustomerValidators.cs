@@ -1,7 +1,7 @@
-using Crud.Generator.Dtos;
+using FastCrud.Dtos;
 using FluentValidation;
 
-namespace Crud.Generator.Validations;
+namespace FastCrud.Validations;
 
 public sealed class CustomerCreateValidator : AbstractValidator<CustomerCreateDto>
 {

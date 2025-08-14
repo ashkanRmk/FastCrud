@@ -1,7 +1,7 @@
-using Crud.Generator.Entities;
+using FastCrud.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Crud.Generator.Data;
+namespace FastCrud.Data;
 
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {

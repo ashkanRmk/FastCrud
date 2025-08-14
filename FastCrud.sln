@@ -2,7 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crud.Generator", "Crud.Generator.csproj", "{B12B8980-E552-87B6-A261-B37DBFE59E81}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastCrud", "FastCrud.csproj", "{B12B8980-E552-87B6-A261-B37DBFE59E81}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

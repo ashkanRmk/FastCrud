@@ -1,4 +1,4 @@
-namespace Crud.Generator.Crud;
+namespace FastCrud.Infrastructure;
 
 [Flags]
 public enum CrudOps

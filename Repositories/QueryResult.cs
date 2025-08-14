@@ -1,4 +1,4 @@
-namespace Crud.Generator.Repositories;
+namespace FastCrud.Repositories;
 
 public sealed class QueryResult<T>
 {

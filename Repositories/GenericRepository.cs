@@ -1,10 +1,10 @@
-using Crud.Generator.Crud;
-using Crud.Generator.Data;
+using FastCrud.Data;
+using FastCrud.Infrastructure;
 using Gridify;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 
-namespace Crud.Generator.Repositories;
+namespace FastCrud.Repositories;
 
 public class GenericRepository<T, TKey>(AppDbContext db) : IGenericRepository<T, TKey>
     where T : class, Abstractions.IEntity<TKey>

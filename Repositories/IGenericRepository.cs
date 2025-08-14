@@ -1,7 +1,7 @@
-using Crud.Generator.Crud;
+using FastCrud.Infrastructure;
 using Gridify;
 
-namespace Crud.Generator.Repositories;
+namespace FastCrud.Repositories;
 
 public interface IGenericRepository<T, TKey> where T : class, Abstractions.IEntity<TKey>
 {
