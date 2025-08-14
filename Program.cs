@@ -1,28 +1,40 @@
-using Crud.Generator.Configuration;
+using Crud.Generator.Crud;
 using Crud.Generator.Data;
-using Crud.Generator.Infrastructure;
+using Crud.Generator.Dtos;
+using Crud.Generator.Entities;
+using Crud.Generator.Repositories;
+using Crud.Generator.Validation;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
-
+using SharpGrip.FluentValidation.AutoValidation.Endpoints.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<AppDbContext>(opt =>
+    opt.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
 
-builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
+
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Crud Minimal API Generator", Version = "v1" });
-});
+builder.Services.AddSwaggerGen();
+
+builder.Services.AddValidatorsFromAssemblyContaining<ProductCreateValidator>();
+builder.Services.AddFluentValidationAutoValidation();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await db.Database.EnsureCreatedAsync();
+}
 
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.RegisterV1CrudRoutes();
-app.RegisterV2CrudRoutes();
+var v1 = app.MapGroup("/v1").AddFluentValidationAutoValidation();
+
+app.MapCrudEndpoints<Product, int, ProductReadDto, ProductCreateDto, ProductUpdateDto>("/products", CrudOps.All);
+app.MapCrudEndpoints<Customer, Guid, CustomerReadDto, CustomerCreateDto, CustomerUpdateDto>("/customers", CrudOps.All & ~CrudOps.Delete);
 
 app.Run();

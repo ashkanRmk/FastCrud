@@ -1,9 +1,11 @@
+using Crud.Generator.Abstractions;
+
 namespace Crud.Generator.Entities;
 
-public class Customer
+public class Customer : IEntity<Guid>
 {
-    public int Id { get; set; }
-    public string FirstName { get; set; } = "";
-    public string LastName  { get; set; } = "";
-    public string Email     { get; set; } = "";
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public string FullName { get; set; } = default!;
+    public string Email { get; set; } = default!;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }
