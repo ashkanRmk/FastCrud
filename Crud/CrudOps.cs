@@ -9,5 +9,9 @@ public enum CrudOps
     Create = 1 << 2,
     Update = 1 << 3,
     Delete = 1 << 4,
-    All = GetAll | GetById | Create | Update | Delete
+    GetPaginated = 1 << 5,
+    GetFiltered = 1 << 6,
+    GetSorted = 1 << 7,
+    GetFullOpsList = GetPaginated | GetFiltered | GetSorted,
+    All = GetAll | GetById | Create | Update | Delete | GetFullOpsList
 }

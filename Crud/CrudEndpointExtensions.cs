@@ -23,15 +23,26 @@ public static class CrudEndpointExtensions
             .MapGroup(version)
             .WithTags(typeof(T).Name)
             .AddFluentValidationAutoValidation();
-        
+
         if (ops.HasFlag(CrudOps.GetAll))
         {
-            group.MapGet(cleanRoute, async (IGenericRepository<T, TKey> repo,[AsParameters] GridifyQuery gq, CancellationToken ct) =>
+            group.MapGet(cleanRoute, async (IGenericRepository<T, TKey> repo, CancellationToken ct) =>
+                {
+                    var list = await repo.GetAllAsync<TReadDto>(ct);
+                    return list is null ? Results.NotFound() : Results.Ok(list);
+                })
+                .WithSummary($"List {typeof(T).Name}")
+                .Produces(StatusCodes.Status200OK);
+        }
+
+        if (ops.HasFlag(CrudOps.GetFullOpsList))
+        {
+            group.MapGet($"{cleanRoute}/Paginated", async (IGenericRepository<T, TKey> repo, [AsParameters] GridifyQuery gq, CancellationToken ct) =>
                 {
                     var query = repo.Query().AsNoTracking();
-                    
+
                     var page = await query.GridifyAsync(gq, ct);
-                    
+
                     var items = page.Data.Select(e => e.Adapt<TReadDto>()).ToList();
 
                     return Results.Ok(new
@@ -50,8 +61,8 @@ public static class CrudEndpointExtensions
         {
             group.MapGet($"{cleanRoute}/{{id}}", async (IGenericRepository<T, TKey> repo, TKey id, CancellationToken ct) =>
             {
-                var entity = await repo.GetByIdAsync(id, ct);
-                return entity is null ? Results.NotFound() : Results.Ok(entity.Adapt<TReadDto>());
+                var dto = await repo.GetByIdAsync<TReadDto>(id, ct);
+                return dto is null ? Results.NotFound() : Results.Ok(dto);
             })
             .WithSummary($"Get {typeof(T).Name} by id")
             .Produces(StatusCodes.Status200OK)
