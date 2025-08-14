@@ -3,7 +3,7 @@ using Crud.Generator.Data;
 using Crud.Generator.Dtos;
 using Crud.Generator.Entities;
 using Crud.Generator.Repositories;
-using Crud.Generator.Validation;
+using Crud.Generator.Validations;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using SharpGrip.FluentValidation.AutoValidation.Endpoints.Extensions;
