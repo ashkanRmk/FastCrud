@@ -1,7 +1,10 @@
 using FastCrud.Data;
+using FastCrud.Entities;
 using FastCrud.Infrastructure;
+using FastCrud.PaginationMappers;
 using FastCrud.Repositories;
 using FluentValidation;
+using Gridify;
 using Microsoft.EntityFrameworkCore;
 using SharpGrip.FluentValidation.AutoValidation.Endpoints.Extensions;
 
@@ -11,6 +14,10 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
     opt.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
 
 builder.Services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
+
+//mapper DI registers
+builder.Services.AddSingleton<GridifyMapper<Product>, ProductMapper>();
+builder.Services.AddSingleton<GridifyMapper<Customer>, CustomerMapper>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
