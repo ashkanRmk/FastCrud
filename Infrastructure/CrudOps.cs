@@ -13,5 +13,5 @@ public enum CrudOps
     GetFiltered = 1 << 6,
     GetSorted = 1 << 7,
     GetFullOpsList = GetPaginated | GetFiltered | GetSorted,
-    All = GetAll | GetById | Create | Update | Delete | GetFullOpsList
+    AllOps = GetAll | GetById | Create | Update | Delete | GetFullOpsList
 }

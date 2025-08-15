@@ -3,7 +3,7 @@ using Gridify;
 
 namespace FastCrud.Repositories;
 
-public interface IGenericRepository<T, TKey> where T : class, Abstractions.IEntity<TKey>
+public interface IGenericRepository<T, in TKey> where T : class, Abstractions.IEntity<TKey>
 {
     Task<List<TDto>> GetAllAsync<TDto>(CancellationToken ct = default);
     Task<TDto?> GetByIdAsync<TDto>(TKey id, CancellationToken ct = default);
@@ -12,6 +12,6 @@ public interface IGenericRepository<T, TKey> where T : class, Abstractions.IEnti
     Task<bool> DeleteAsync(TKey id, CancellationToken ct = default);
     IQueryable<T> Query();
 
-    Task<QueryResult<TDto>> GetAllPaginatedAsync<TDto>(GridifyQuery gq, CrudOps crudOps, CancellationToken ct = default);
+    Task<QueryResult<TDto>> GetAllPaginatedAsync<TDto>(GridifyQuery gridifyQuery, CrudOps crudOps, CancellationToken ct = default);
 
 }

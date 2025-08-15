@@ -15,14 +15,12 @@ public class GenericRepository<T, TKey>(AppDbContext db) : IGenericRepository<T,
         .ProjectToType<TDto>()
         .ToListAsync(ct);
 
-
     public async Task<TDto?> GetByIdAsync<TDto>(TKey id, CancellationToken ct = default)
         => await db.Set<T>()
             .AsNoTracking()
             .Where(e => EqualityComparer<TKey>.Default.Equals(e.Id, id))
             .ProjectToType<TDto>()
             .FirstOrDefaultAsync(ct);
-
 
     public async Task<T> AddAsync(T entity, CancellationToken ct = default)
     {
@@ -51,29 +49,29 @@ public class GenericRepository<T, TKey>(AppDbContext db) : IGenericRepository<T,
 
     public IQueryable<T> Query() => db.Set<T>().AsQueryable();
 
-    public async Task<QueryResult<TDto>> GetAllPaginatedAsync<TDto>(GridifyQuery gq, CrudOps crudOps, CancellationToken ct = default)
+    public async Task<QueryResult<TDto>> GetAllPaginatedAsync<TDto>(GridifyQuery gridifyQuery, CrudOps crudOps, CancellationToken ct = default)
     {
-        var q = db.Set<T>().AsNoTracking().AsQueryable();
+        var query = db.Set<T>().AsNoTracking().AsQueryable();
 
-        if (crudOps.HasFlag(CrudOps.GetFiltered) && !string.IsNullOrWhiteSpace(gq.Filter))
-            q = q.ApplyFiltering(gq);
+        if (crudOps.HasFlag(CrudOps.GetFiltered) && !string.IsNullOrWhiteSpace(gridifyQuery.Filter))
+            query = query.ApplyFiltering(gridifyQuery);
 
-        if (crudOps.HasFlag(CrudOps.GetSorted) && !string.IsNullOrWhiteSpace(gq.OrderBy))
-            q = q.ApplyOrdering(gq);
+        if (crudOps.HasFlag(CrudOps.GetSorted) && !string.IsNullOrWhiteSpace(gridifyQuery.OrderBy))
+            query = query.ApplyOrdering(gridifyQuery);
 
-        var total = await q.CountAsync(ct);
+        var total = await query.CountAsync(ct);
 
         if (crudOps.HasFlag(CrudOps.GetPaginated))
-            q = q.ApplyPaging(gq);
+            query = query.ApplyPaging(gridifyQuery);
 
-        var items = await q.ProjectToType<TDto>().ToListAsync(ct);
+        var items = await query.ProjectToType<TDto>().ToListAsync(ct);
 
         return new QueryResult<TDto>
         {
             Items = items,
             TotalItems = total,
-            Page = crudOps.HasFlag(CrudOps.GetPaginated) ? gq.Page : 1,
-            PageSize = crudOps.HasFlag(CrudOps.GetPaginated) ? gq.PageSize : items.Count
+            Page = crudOps.HasFlag(CrudOps.GetPaginated) ? gridifyQuery.Page : 1,
+            PageSize = crudOps.HasFlag(CrudOps.GetPaginated) ? gridifyQuery.PageSize : items.Count
         };
     }
 }

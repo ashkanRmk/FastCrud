@@ -1,9 +1,6 @@
 using FastCrud.Data;
-using FastCrud.Dtos;
-using FastCrud.Entities;
 using FastCrud.Infrastructure;
 using FastCrud.Repositories;
-using FastCrud.Validations;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using SharpGrip.FluentValidation.AutoValidation.Endpoints.Extensions;
@@ -18,7 +15,7 @@ builder.Services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericReposito
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddValidatorsFromAssemblyContaining<ProductCreateValidator>();
+builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
 builder.Services.AddFluentValidationAutoValidation();
 
 var app = builder.Build();
@@ -32,9 +29,6 @@ using (var scope = app.Services.CreateScope())
 app.UseSwagger();
 app.UseSwaggerUI();
 
-var v1 = app.MapGroup("/v1").AddFluentValidationAutoValidation();
-
-app.MapCrudEndpoints<Product, int, ProductReadDto, ProductCreateDto, ProductUpdateDto>("/products", CrudOps.All);
-app.MapCrudEndpoints<Customer, Guid, CustomerReadDto, CustomerCreateDto, CustomerUpdateDto>("/customers", CrudOps.All & ~CrudOps.Delete);
+app.MapEndpointsFromAssembly(typeof(Program).Assembly, "/v1");
 
 app.Run();
