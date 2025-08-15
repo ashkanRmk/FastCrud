@@ -14,7 +14,7 @@ public sealed class CustomerMapper : GridifyMapper<Customer>
         })
     {
         AddMap(nameof(Customer.Id), c => c.Id);
-        AddMap(nameof(Customer.FullName), c => c.FullName);
+        // AddMap(nameof(Customer.FullName), c => c.FullName.ToLower(), c => c.ToLower());
         AddMap(nameof(Customer.Email), c => c.Email);
         AddMap(nameof(Customer.CreatedAt), c => c.CreatedAt);
     }
