@@ -1,4 +1,4 @@
-namespace Crud.Generator.Dtos;
+namespace FastCrud.Dtos;
 
 public sealed class ProductReadDto
 {

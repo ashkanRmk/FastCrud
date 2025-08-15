@@ -1,4 +1,4 @@
-namespace Crud.Generator.Abstractions;
+namespace FastCrud.Abstractions;
 
 public interface IEntity<TKey>
 {

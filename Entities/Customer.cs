@@ -1,6 +1,6 @@
-using Crud.Generator.Abstractions;
+using FastCrud.Abstractions;
 
-namespace Crud.Generator.Entities;
+namespace FastCrud.Entities;
 
 public class Customer : IEntity<Guid>
 {

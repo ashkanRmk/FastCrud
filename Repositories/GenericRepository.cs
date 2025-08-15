@@ -1,41 +1,93 @@
-using Crud.Generator.Data;
+using FastCrud.Data;
+using FastCrud.Infrastructure;
+using Gridify;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
 
-namespace Crud.Generator.Repositories;
+namespace FastCrud.Repositories;
 
-public class GenericRepository<T, TKey>(AppDbContext db) : IGenericRepository<T, TKey>
-    where T : class
+public class GenericRepository<T, TKey> : IGenericRepository<T, TKey>
+    where T : class, Abstractions.IEntity<TKey>
 {
-    public async Task<List<T>> GetAllAsync(CancellationToken ct = default)
-        => await db.Set<T>().AsNoTracking().ToListAsync(ct);
+    private readonly AppDbContext _db;
+    private readonly GridifyMapper<T>? _mapper;
 
-    public async Task<T?> GetByIdAsync(TKey id, CancellationToken ct = default)
-        => await db.Set<T>().FindAsync([id], ct);
+    public GenericRepository(AppDbContext db, GridifyMapper<T>? mapper = null)
+    {
+        _db = db;
+        _mapper = mapper;
+    }
+
+    public async Task<List<TDto>> GetAllAsync<TDto>(CancellationToken ct = default)
+        => await _db.Set<T>()
+            .AsNoTracking()
+            .ProjectToType<TDto>()
+            .ToListAsync(ct);
+
+    public async Task<TDto?> GetByIdAsync<TDto>(TKey id, CancellationToken ct = default)
+        => await _db.Set<T>()
+            .AsNoTracking()
+            .Where(e => EqualityComparer<TKey>.Default.Equals(e.Id, id))
+            .ProjectToType<TDto>()
+            .FirstOrDefaultAsync(ct);
 
     public async Task<T> AddAsync(T entity, CancellationToken ct = default)
     {
-        db.Set<T>().Add(entity);
-        await db.SaveChangesAsync(ct);
+        _db.Set<T>().Add(entity);
+        await _db.SaveChangesAsync(ct);
         return entity;
     }
 
-    public async Task<T?> UpdateAsync(TKey id, Action<T> update, CancellationToken ct = default)
+    public async Task<TReadDto?> UpdateAsync<TUpdateDto, TReadDto>(TKey id, TUpdateDto dto,
+        CancellationToken ct = default)
     {
-        var entity = await db.Set<T>().FindAsync([id], ct);
-        if (entity is null) return null;
-        update(entity);
-        await db.SaveChangesAsync(ct);
-        return entity;
+        var entity = await _db.Set<T>().FindAsync([id], ct);
+        if (entity is null) return default;
+
+        dto.Adapt(entity);
+
+        await _db.SaveChangesAsync(ct);
+
+        return entity.Adapt<TReadDto>();
     }
 
     public async Task<bool> DeleteAsync(TKey id, CancellationToken ct = default)
     {
-        var entity = await db.Set<T>().FindAsync([id], ct);
+        var entity = await _db.Set<T>().FindAsync([id], ct);
         if (entity is null) return false;
-        db.Remove(entity);
-        await db.SaveChangesAsync(ct);
+
+        _db.Remove(entity);
+
+        await _db.SaveChangesAsync(ct);
         return true;
     }
 
-    public IQueryable<T> Query() => db.Set<T>().AsQueryable();
+    public IQueryable<T> Query() => _db.Set<T>().AsQueryable();
+
+    public async Task<QueryResult<TDto>> GetAllPaginatedAsync<TDto>(GridifyQuery gridifyQuery, CrudOps crudOps,
+        CancellationToken ct = default)
+    {
+        var query = _db.Set<T>().AsNoTracking().AsQueryable();
+
+        if (crudOps.HasFlag(CrudOps.GetFiltered) && !string.IsNullOrWhiteSpace(gridifyQuery.Filter))
+            query = _mapper is null ? query.ApplyFiltering(gridifyQuery) : query.ApplyFiltering(gridifyQuery, _mapper);
+
+        if (crudOps.HasFlag(CrudOps.GetSorted) && !string.IsNullOrWhiteSpace(gridifyQuery.OrderBy))
+            query = _mapper is null ? query.ApplyOrdering(gridifyQuery) : query.ApplyOrdering(gridifyQuery, _mapper);
+
+        var total = await query.CountAsync(ct);
+
+        if (crudOps.HasFlag(CrudOps.GetPaginated))
+            query = query.ApplyPaging(gridifyQuery);
+
+        var items = await query.ProjectToType<TDto>().ToListAsync(ct);
+
+        return new QueryResult<TDto>
+        {
+            Items = items,
+            TotalItems = total,
+            Page = crudOps.HasFlag(CrudOps.GetPaginated) ? gridifyQuery.Page : 1,
+            PageSize = crudOps.HasFlag(CrudOps.GetPaginated) ? gridifyQuery.PageSize : items.Count
+        };
+    }
 }
