@@ -69,18 +69,11 @@ public class GenericRepository<T, TKey> : IGenericRepository<T, TKey>
     {
         var query = _db.Set<T>().AsNoTracking().AsQueryable();
 
-        try
-        {
-            if (crudOps.HasFlag(CrudOps.GetFiltered) && !string.IsNullOrWhiteSpace(gridifyQuery.Filter))
-                query = _mapper is null ? query.ApplyFiltering(gridifyQuery) : query.ApplyFiltering(gridifyQuery, _mapper);
+        if (crudOps.HasFlag(CrudOps.GetFiltered) && !string.IsNullOrWhiteSpace(gridifyQuery.Filter))
+            query = _mapper is null ? query.ApplyFiltering(gridifyQuery) : query.ApplyFiltering(gridifyQuery, _mapper);
 
-            if (crudOps.HasFlag(CrudOps.GetSorted) && !string.IsNullOrWhiteSpace(gridifyQuery.OrderBy))
-                query = _mapper is null ? query.ApplyOrdering(gridifyQuery) : query.ApplyOrdering(gridifyQuery, _mapper);
-        }
-        catch (Exception ex) when (ex.GetType().Name.Contains("Gridify", StringComparison.OrdinalIgnoreCase))
-        {
-            throw new BadHttpRequestException("Unsupported filter/sort field. Check allowed fields.", 400);
-        }
+        if (crudOps.HasFlag(CrudOps.GetSorted) && !string.IsNullOrWhiteSpace(gridifyQuery.OrderBy))
+            query = _mapper is null ? query.ApplyOrdering(gridifyQuery) : query.ApplyOrdering(gridifyQuery, _mapper);
 
         var total = await query.CountAsync(ct);
 

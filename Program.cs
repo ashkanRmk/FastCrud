@@ -23,6 +23,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
 builder.Services.AddFluentValidationAutoValidation();
 
+GridifyGlobalConfiguration.EnableEntityFrameworkCompatibilityLayer();
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())

@@ -8,13 +8,11 @@ public sealed class CustomerMapper : GridifyMapper<Customer>
     public CustomerMapper()
         : base(new GridifyMapperConfiguration
         {
-            IgnoreNotMappedFields = false,
-            CaseSensitive = false,
-            EntityFrameworkCompatibilityLayer = true
+            CaseInsensitiveFiltering = true
         })
     {
         AddMap(nameof(Customer.Id), c => c.Id);
-        // AddMap(nameof(Customer.FullName), c => c.FullName.ToLower(), c => c.ToLower());
+        AddMap(nameof(Customer.FullName), c => c.FullName);
         AddMap(nameof(Customer.Email), c => c.Email);
         AddMap(nameof(Customer.CreatedAt), c => c.CreatedAt);
     }

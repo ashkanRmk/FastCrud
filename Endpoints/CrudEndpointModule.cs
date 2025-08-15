@@ -30,15 +30,8 @@ public abstract class CrudEndpointModule<T, TKey, TReadDto, TCreateDto, TUpdateD
         {
             group.MapGet("/Paginated", async (IGenericRepository<T, TKey> repo, [AsParameters] GridifyQuery gq, CancellationToken ct) =>
                 {
-                    try
-                    {
-                        var list = await repo.GetAllPaginatedAsync<TReadDto>(gq, ops, ct);
-                        return Results.Ok(list);
-                    }
-                    catch (BadHttpRequestException ex)
-                    {
-                        return Results.BadRequest(ex.Message);
-                    }
+                    var list = await repo.GetAllPaginatedAsync<TReadDto>(gq, ops, ct);
+                    return Results.Ok(list);
                 })
                 .WithSummary($"List {typeof(T).Name} with filtering/sorting/paging")
                 .Produces(StatusCodes.Status200OK);
