@@ -8,9 +8,9 @@ namespace FastCrud.Endpoints;
 
 public sealed class ProductEndpoints()
     : CrudEndpointModule<Product, int, ProductReadDto, ProductCreateDto, ProductUpdateDto>
-        (ops: CrudOps.AllOps)
 {
     public override string RoutePrefix => "/products";
+    public override CrudOps Ops => CrudOps.AllOps;
 
     protected override void MapCustomEndpoints(RouteGroupBuilder group)
     {
@@ -21,7 +21,7 @@ public sealed class ProductEndpoints()
                     .OrderByDescending(p => p.Price)
                     .Take(count)
                     .Select(p => new ProductReadDto
-                        { Id = p.Id, Name = p.Name, Price = p.Price, CreatedAt = p.CreatedAt })
+                    { Id = p.Id, Name = p.Name, Price = p.Price, CreatedAt = p.CreatedAt })
                     .ToListAsync(ct);
 
                 return Results.Ok(items);

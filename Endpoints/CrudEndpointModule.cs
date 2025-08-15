@@ -9,13 +9,15 @@ using Microsoft.EntityFrameworkCore;
 namespace FastCrud.Endpoints;
 
 public abstract class CrudEndpointModule<T, TKey, TReadDto, TCreateDto, TUpdateDto>
-    (CrudOps ops) :
+    :
     EndpointModuleBase
     where T : class, IEntity<TKey>, new()
 {
+    public virtual CrudOps Ops => CrudOps.AllOps;
+
     protected override void MapEndpoints(RouteGroupBuilder group)
     {
-        if (ops.HasFlag(CrudOps.GetAll))
+        if (Ops.HasFlag(CrudOps.GetAll))
         {
             group.MapGet("/List", async (IGenericRepository<T, TKey> repo, CancellationToken ct) =>
                 {
@@ -26,18 +28,18 @@ public abstract class CrudEndpointModule<T, TKey, TReadDto, TCreateDto, TUpdateD
                 .Produces(StatusCodes.Status200OK);
         }
 
-        if (ops.HasFlag(CrudOps.GetFullOpsList))
+        if (Ops.HasFlag(CrudOps.GetFullOpsList))
         {
             group.MapGet("/Paginated", async (IGenericRepository<T, TKey> repo, [AsParameters] GridifyQuery gq, CancellationToken ct) =>
                 {
-                    var list = await repo.GetAllPaginatedAsync<TReadDto>(gq, ops, ct);
+                    var list = await repo.GetAllPaginatedAsync<TReadDto>(gq, Ops, ct);
                     return Results.Ok(list);
                 })
                 .WithSummary($"List {typeof(T).Name} with filtering/sorting/paging")
                 .Produces(StatusCodes.Status200OK);
         }
 
-        if (ops.HasFlag(CrudOps.GetById))
+        if (Ops.HasFlag(CrudOps.GetById))
         {
             group.MapGet("/{id}", async (IGenericRepository<T, TKey> repo, TKey id, CancellationToken ct) =>
             {
@@ -49,7 +51,7 @@ public abstract class CrudEndpointModule<T, TKey, TReadDto, TCreateDto, TUpdateD
             .Produces(StatusCodes.Status404NotFound);
         }
 
-        if (ops.HasFlag(CrudOps.Create))
+        if (Ops.HasFlag(CrudOps.Create))
         {
             group.MapPost("/", async (IGenericRepository<T, TKey> repo, TCreateDto dto, CancellationToken ct) =>
             {
@@ -62,7 +64,7 @@ public abstract class CrudEndpointModule<T, TKey, TReadDto, TCreateDto, TUpdateD
             .Produces(StatusCodes.Status400BadRequest);
         }
 
-        if (ops.HasFlag(CrudOps.Update))
+        if (Ops.HasFlag(CrudOps.Update))
         {
             group.MapPut("/{id}", async (IGenericRepository<T, TKey> repo, TKey id, TUpdateDto dto, CancellationToken ct) =>
             {
@@ -75,7 +77,7 @@ public abstract class CrudEndpointModule<T, TKey, TReadDto, TCreateDto, TUpdateD
             .Produces(StatusCodes.Status400BadRequest);
         }
 
-        if (ops.HasFlag(CrudOps.Delete))
+        if (Ops.HasFlag(CrudOps.Delete))
         {
             group.MapDelete("/{id}", async (IGenericRepository<T, TKey> repo, TKey id, CancellationToken ct) =>
             {

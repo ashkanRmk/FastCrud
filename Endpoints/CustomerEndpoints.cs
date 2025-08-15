@@ -8,9 +8,9 @@ namespace FastCrud.Endpoints;
 
 public sealed class CustomerEndpoints()
     : CrudEndpointModule<Customer, Guid, CustomerReadDto, CustomerCreateDto, CustomerUpdateDto>
-    (ops: CrudOps.AllOps & ~CrudOps.Delete)
 {
     public override string RoutePrefix => "/customers";
+    public override CrudOps Ops => CrudOps.AllOps & ~CrudOps.Delete;
 
     protected override void MapCustomEndpoints(RouteGroupBuilder group)
     {
