@@ -28,21 +28,26 @@ public class GenericRepository<T, TKey>(AppDbContext db) : IGenericRepository<T,
         await db.SaveChangesAsync(ct);
         return entity;
     }
-
-    public async Task<T?> UpdateAsync(TKey id, Action<T> update, CancellationToken ct = default)
+    
+    public async Task<TReadDto?> UpdateAsync<TUpdateDto, TReadDto>(TKey id, TUpdateDto dto, CancellationToken ct = default)
     {
         var entity = await db.Set<T>().FindAsync([id], ct);
-        if (entity is null) return null;
-        update(entity);
+        if (entity is null) return default;
+
+        dto.Adapt(entity);
+
         await db.SaveChangesAsync(ct);
-        return entity;
+
+        return entity.Adapt<TReadDto>();
     }
 
     public async Task<bool> DeleteAsync(TKey id, CancellationToken ct = default)
     {
         var entity = await db.Set<T>().FindAsync([id], ct);
         if (entity is null) return false;
+        
         db.Remove(entity);
+        
         await db.SaveChangesAsync(ct);
         return true;
     }

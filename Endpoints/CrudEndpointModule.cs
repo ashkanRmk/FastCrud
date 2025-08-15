@@ -15,13 +15,6 @@ public abstract class CrudEndpointModule<T, TKey, TReadDto, TCreateDto, TUpdateD
 {
     protected override void MapEndpoints(RouteGroupBuilder group)
     {
-        //  var cleanRoute = "/" + typeof(T).Name.ToLower();
-        //
-        // var group = app
-        //     .MapGroup(version)
-        //     .WithTags(typeof(T).Name)
-        //     .AddFluentValidationAutoValidation();
-
         if (ops.HasFlag(CrudOps.GetAll))
         {
             group.MapGet("/List", async (IGenericRepository<T, TKey> repo, CancellationToken ct) =>
@@ -84,8 +77,8 @@ public abstract class CrudEndpointModule<T, TKey, TReadDto, TCreateDto, TUpdateD
         {
             group.MapPut("/{id}", async (IGenericRepository<T, TKey> repo, TKey id, TUpdateDto dto, CancellationToken ct) =>
             {
-                var updated = await repo.UpdateAsync(id, ent => dto.Adapt(ent), ct);
-                return updated is null ? Results.NotFound() : Results.Ok(updated.Adapt<TReadDto>());
+                var readDto = await repo.UpdateAsync<TUpdateDto, TReadDto>(id, dto, ct);
+                return readDto is null ? Results.NotFound() : Results.Ok(readDto);
             })
             .WithSummary($"Update {typeof(T).Name}")
             .Produces(StatusCodes.Status200OK)
