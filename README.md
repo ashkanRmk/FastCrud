@@ -1,81 +1,133 @@
-# 📁 Crud Minimal API Generator
+# 📁 FastCrud: Minimal API Generator
 
-A .NET 9+, PostgreSQL-based Minimal API starter that provides easy CRUD:
+Minimal-API template in .NET 9 for auto-generating CRUD endpoints with DTOs, validation, pagination, filtering, and sorting—powered by **Gridify**, **FluentValidation**, and **Mapster**.
 
-* Generic repository pattern with EF Core
-* Generic `CrudRegistrar.RegisterCrudEndpoints<TEntity>()` logic
-* Optional inclusion/exclusion of specific HTTP methods via flags
-* Swagger/OpenAPI support via `.WithOpenApi()` and `MapOpenApi()`
+## Features
 
----
-
-## ✨ Why this setup?
-
-* **Minimal code overhead** — declare your entity once, get all CRUD for free
-* **Per-entity customization** — skip or restrict operations like DELETE
-* **Self-documenting** — `.WithOpenApi()` generates clean Swagger UI automatically
-* **Extensible** — easy to override individual endpoints (example included)
+- **Auto-registered** CRUD with **Minimal API** and **DTOs**
+- **Validation** via FluentValidation
+- **Paging**, **filtering**, **sorting** using Gridify
+- **Field allow-lists** via mappers to control exposed columns
+- **Modular endpoints** per entity
+- **Swagger/OpenAPI** documentation built-in
 
 ---
 
 ## 🧱 How to add a new entity with CRUD
 
-Let’s add an example entity: `Customer`
+Let’s add an example entity: `Order`
 
-### 1. Create the model
+### 1. Define your Entity & DTOs
 
-**`Models/Customer.cs`**
+**`Entities/Order.cs`**
 
 ```csharp
-namespace CrudMinimalApi.Models;
-
-public class Customer
+public class Order : IEntity<int>
 {
     public int Id { get; set; }
-    public string FirstName { get; set; } = "";
-    public string LastName  { get; set; } = "";
-    public string Email     { get; set; } = "";
+    public string CustomerName { get; set; } = default!;
+    public decimal TotalAmount { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }
 ```
 
----
-
-### 2. Register the DbSet in your DbContext
-
-**`Data/AppDbContext.cs`**
+**`Dtos/OrderDtos.cs`**
 
 ```csharp
-public class AppDbContext : DbContext
-{
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+public record OrderReadDto(int Id, string CustomerName, decimal TotalAmount, DateTime CreatedAt);
+public record OrderCreateDto(string CustomerName, decimal TotalAmount);
+public record OrderUpdateDto(string CustomerName, decimal TotalAmount);
+```
 
-    public DbSet<Product> Products => Set<Product>();
-    public DbSet<Customer> Customers => Set<Customer>();
+---
+
+### 2. Add Validators
+
+**`PaginationMappers/OrderMapper.cs`**
+
+```csharp
+public class OrderCreateValidator : AbstractValidator<OrderCreateDto>
+{
+    public OrderCreateValidator()
+    {
+        RuleFor(x => x.CustomerName).NotEmpty();
+        RuleFor(x => x.TotalAmount).GreaterThanOrEqualTo(0);
+    }
+}
+
+public class OrderUpdateValidator : AbstractValidator<OrderUpdateDto>
+{
+    public OrderUpdateValidator()
+    {
+        RuleFor(x => x.CustomerName).NotEmpty();
+        RuleFor(x => x.TotalAmount).GreaterThanOrEqualTo(0);
+    }
 }
 ```
 
 ---
 
-### 3. Add CRUD endpoint registration in `CrudEndpointConfig.cs` from `Configuration` folder
+### 3. Add a Gridify mapper (explicit allow-list)
 
-Inside `RegisterV1CrudRoutes` section, pick one of the following:
+**`PaginationMappers/OrderMapper.cs`**
 
-| Operation               | Code snippet                                                                                                |
-| ----------------------- |-------------------------------------------------------------------------------------------------------------|
-| Full CRUD (default)     | `app.RegisterCrudEndpoints<Customer>("/customers");`                                                        |
-| Only GET & POST         | `app.RegisterCrudEndpoints<Customer>("/customers", CrudOps.GetAll \| CrudOps.Create);\`                     |
-| Skip DELETE             | `app.RegisterCrudEndpoints<Customer>("/customers", CrudOps.All & ~CrudOps.Delete);`                         |
-| No endpoints (override) | `app.RegisterCrudEndpoints<Customer>("/customers", CrudOps.None);`                                          |
+```csharp
+public sealed class OrderMapper : GridifyMapper<Order>
+{
+    public OrderMapper()
+        : base(new GridifyMapperConfiguration
+        {
+            CaseInsensitiveFiltering = true
+        })
+    {
+        AddMap(nameof(Order.Id),        o => o.Id);
+        AddMap(nameof(Order.CustomerName), o => o.CustomerName);
+        AddMap(nameof(Order.TotalAmount), o => o.TotalAmount);
+        AddMap(nameof(Order.CreatedAt), o => o.CreatedAt);
+    }
+}
+```
 
-> You can have multiple method for registering your endpoints based on your versions!
 ---
 
-### 4. Apply migrations and run
+### 4. Create Endpoint Module
 
-```bash
-dotnet ef migrations add AddCustomer
-dotnet ef database update
-dotnet run
+**`Endpoints/OrderEndpoints.cs`**
+
+```csharp
+public sealed class OrderEndpoints : CrudEndpointModule<Order, int, OrderReadDto, OrderCreateDto, OrderUpdateDto>
+{
+    public override string RoutePrefix => "/orders";
+    public override CrudOps Ops => CrudOps.AllOps;
+
+    protected override void MapCustomEndpoints(RouteGroupBuilder group)
+    {
+        // Optional: additional endpoint
+        group.MapGet("/top/{count:int}", async (AppDbContext db, int count, CancellationToken ct) =>
+        {
+            var list = await db.Set<Order>()
+                .OrderByDescending(o => o.TotalAmount)
+                .Take(count)
+                .Select(o => new OrderReadDto(o.Id, o.CustomerName, o.TotalAmount, o.CreatedAt))
+                .ToListAsync(ct);
+            return Results.Ok(list);
+        });
+    }
+}
 ```
+
+---
+
+### 5. Run and Test
+
+CRUD appears under `/v1/orders` in Swagger. It supports:
+
+Paging (`?page=1&pageSize=10`)
+
+Filtering (`?filter=CustomerName=*smith`)
+
+Sorting (`?orderBy=TotalAmount desc`)
+
+---
 
 Visit/swagger UI at `https://localhost:5001/swagger`
