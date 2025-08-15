@@ -15,9 +15,7 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
 
 builder.Services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
 
-//mapper DI registers
-builder.Services.AddSingleton<GridifyMapper<Product>, ProductMapper>();
-builder.Services.AddSingleton<GridifyMapper<Customer>, CustomerMapper>();
+builder.Services.AddGridifyMappersFromAssembly(typeof(Program).Assembly);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
