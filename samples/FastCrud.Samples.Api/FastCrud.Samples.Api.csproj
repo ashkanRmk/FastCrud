@@ -32,11 +32,6 @@
 
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
-    </ItemGroup>
-
-
-    <ItemGroup>
       <ProjectReference Include="..\..\src\FastCrud.Abstractions\FastCrud.Abstractions.csproj" />
       <ProjectReference Include="..\..\src\FastCrud.Core\FastCrud.Core.csproj" />
       <ProjectReference Include="..\..\src\FastCrud.Mapping.Mapster\FastCrud.Mapping.Mapster.csproj" />
