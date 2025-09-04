@@ -1,0 +1,53 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+      <TargetFramework>net9.0</TargetFramework>
+      <Nullable>enable</Nullable>
+      <ImplicitUsings>enable</ImplicitUsings>
+      <LangVersion>latest</LangVersion>
+      <Deterministic>true</Deterministic>
+      <GenerateDocumentationFile>true</GenerateDocumentationFile>
+      <Description>Sample project (not packed) to demonstrate wiring.</Description>
+      <PackageId>FastCrud.Samples.Api</PackageId>
+      <Authors>Ashkan Rahmani</Authors>
+      <Company></Company>
+      <PackageProjectUrl>https://github.com/ashkanRmk/FastCrud</PackageProjectUrl>
+      <RepositoryUrl>https://github.com/ashkanRmk/FastCrud</RepositoryUrl>
+      <RepositoryType>git</RepositoryType>
+      <PackageLicenseExpression>MIT</PackageLicenseExpression>
+      <IncludeSymbols>true</IncludeSymbols>
+      <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+      <PublishRepositoryUrl>true</PublishRepositoryUrl>
+      <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+      <EmbedUntrackedSources>true</EmbedUntrackedSources>
+      <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+      <PackageReadmeFile>README.md</PackageReadmeFile>
+
+    </PropertyGroup>
+
+
+    <ItemGroup>
+      <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\FastCrud.Abstractions\FastCrud.Abstractions.csproj" />
+      <ProjectReference Include="..\..\src\FastCrud.Core\FastCrud.Core.csproj" />
+      <ProjectReference Include="..\..\src\FastCrud.Mapping.Mapster\FastCrud.Mapping.Mapster.csproj" />
+      <ProjectReference Include="..\..\src\FastCrud.Query.Gridify\FastCrud.Query.Gridify.csproj" />
+      <ProjectReference Include="..\..\src\FastCrud.Validation.FluentValidation\FastCrud.Validation.FluentValidation.csproj" />
+      <ProjectReference Include="..\..\src\FastCrud.Web.MinimalApi\FastCrud.Web.MinimalApi.csproj" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <None Include="README.md" Pack="true" PackagePath=""/>
+    </ItemGroup>
+
+</Project>

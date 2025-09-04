@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+      <TargetFramework>net9.0</TargetFramework>
+      <Nullable>enable</Nullable>
+      <ImplicitUsings>enable</ImplicitUsings>
+      <LangVersion>latest</LangVersion>
+      <Deterministic>true</Deterministic>
+      <GenerateDocumentationFile>true</GenerateDocumentationFile>
+      <Description>Gridify adapter for FastCrud.</Description>
+      <PackageId>FastCrud.Query.Gridify</PackageId>
+      <Authors>Ashkan Rahmani</Authors>
+      <Company></Company>
+      <PackageProjectUrl>https://github.com/ashkanRmk/FastCrud</PackageProjectUrl>
+      <RepositoryUrl>https://github.com/ashkanRmk/FastCrud</RepositoryUrl>
+      <RepositoryType>git</RepositoryType>
+      <PackageLicenseExpression>MIT</PackageLicenseExpression>
+      <IncludeSymbols>true</IncludeSymbols>
+      <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+      <PublishRepositoryUrl>true</PublishRepositoryUrl>
+      <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+      <EmbedUntrackedSources>true</EmbedUntrackedSources>
+      <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+      <PackageReadmeFile>README.md</PackageReadmeFile>
+
+    </PropertyGroup>
+
+
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <ProjectReference Include="..\FastCrud.Abstractions\FastCrud.Abstractions.csproj" />
+      <PackageReference Include="Gridify" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <None Include="README.md" Pack="true" PackagePath=""/>
+    </ItemGroup>
+
+</Project>
