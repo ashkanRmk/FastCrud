@@ -19,9 +19,9 @@
       <PublishRepositoryUrl>true</PublishRepositoryUrl>
       <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
       <EmbedUntrackedSources>true</EmbedUntrackedSources>
+
       <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-      <PackageReadmeFile>README.md</PackageReadmeFile>
-        <OutputType>Exe</OutputType>
+      <OutputType>Exe</OutputType>
     </PropertyGroup>
 
 
@@ -29,6 +29,10 @@
       <FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>
 
+    <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+    </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\FastCrud.Abstractions\FastCrud.Abstractions.csproj" />

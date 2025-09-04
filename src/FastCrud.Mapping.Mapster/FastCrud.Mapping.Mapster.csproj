@@ -10,7 +10,6 @@
       <Description>Mapster adapter for FastCrud.</Description>
       <PackageId>FastCrud.Mapping.Mapster</PackageId>
       <Authors>Ashkan Rahmani</Authors>
-      <Company></Company>
       <PackageProjectUrl>https://github.com/ashkanRmk/FastCrud</PackageProjectUrl>
       <RepositoryUrl>https://github.com/ashkanRmk/FastCrud</RepositoryUrl>
       <RepositoryType>git</RepositoryType>

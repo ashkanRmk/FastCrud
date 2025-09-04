@@ -1,10 +1,8 @@
-using FastCrud.Abstractions;
 using FastCrud.Core.DI;
 using FastCrud.Mapping.Mapster.DI;
 using FastCrud.Query.Gridify.DI;
 using FastCrud.Validation.FluentValidation.DI;
 using FastCrud.Web.MinimalApi;
-using Microsoft.AspNetCore.Builder;
 
 var builder = WebApplication.CreateBuilder(args);
 
