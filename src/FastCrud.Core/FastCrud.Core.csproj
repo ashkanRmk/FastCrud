@@ -10,7 +10,6 @@
       <Description>Core CRUD orchestration over abstractions.</Description>
       <PackageId>FastCrud.Core</PackageId>
       <Authors>Ashkan Rahmani</Authors>
-      <Company></Company>
       <PackageProjectUrl>https://github.com/ashkanRmk/FastCrud</PackageProjectUrl>
       <RepositoryUrl>https://github.com/ashkanRmk/FastCrud</RepositoryUrl>
       <RepositoryType>git</RepositoryType>
@@ -28,6 +27,7 @@
     <ItemGroup>
       <ProjectReference Include="..\FastCrud.Abstractions\FastCrud.Abstractions.csproj" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+        <PackageReference Include="Microsoft.Extensions.Options" />
     </ItemGroup>
 
 

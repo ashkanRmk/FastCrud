@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
       <TargetFramework>net9.0</TargetFramework>
@@ -7,10 +7,9 @@
       <LangVersion>latest</LangVersion>
       <Deterministic>true</Deterministic>
       <GenerateDocumentationFile>true</GenerateDocumentationFile>
-      <Description>Sample project (not packed) to demonstrate wiring.</Description>
+      <Description>Sample project to demonstrate wiring.</Description>
       <PackageId>FastCrud.Samples.Api</PackageId>
       <Authors>Ashkan Rahmani</Authors>
-      <Company></Company>
       <PackageProjectUrl>https://github.com/ashkanRmk/FastCrud</PackageProjectUrl>
       <RepositoryUrl>https://github.com/ashkanRmk/FastCrud</RepositoryUrl>
       <RepositoryType>git</RepositoryType>
@@ -22,7 +21,7 @@
       <EmbedUntrackedSources>true</EmbedUntrackedSources>
       <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
       <PackageReadmeFile>README.md</PackageReadmeFile>
-
+        <OutputType>Exe</OutputType>
     </PropertyGroup>
 
 
