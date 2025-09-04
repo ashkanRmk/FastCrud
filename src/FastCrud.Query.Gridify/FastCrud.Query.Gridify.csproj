@@ -1,38 +1,23 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
     <PropertyGroup>
       <TargetFramework>net9.0</TargetFramework>
       <Nullable>enable</Nullable>
       <ImplicitUsings>enable</ImplicitUsings>
       <LangVersion>latest</LangVersion>
-      <Deterministic>true</Deterministic>
-      <GenerateDocumentationFile>true</GenerateDocumentationFile>
-      <Description>Gridify adapter for FastCrud.</Description>
       <PackageId>FastCrud.Query.Gridify</PackageId>
-      <Authors>Ashkan Rahmani</Authors>
-      <Company></Company>
-      <PackageProjectUrl>https://github.com/ashkanRmk/FastCrud</PackageProjectUrl>
-      <RepositoryUrl>https://github.com/ashkanRmk/FastCrud</RepositoryUrl>
-      <RepositoryType>git</RepositoryType>
-      <PackageLicenseExpression>MIT</PackageLicenseExpression>
-      <IncludeSymbols>true</IncludeSymbols>
-      <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-      <PublishRepositoryUrl>true</PublishRepositoryUrl>
-      <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
-      <EmbedUntrackedSources>true</EmbedUntrackedSources>
+      <Description>Gridify adapter for FastCrud.</Description>
       <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-      <PackageReadmeFile>README.md</PackageReadmeFile>
-
+      <PublishRepositoryUrl>true</PublishRepositoryUrl>
+      <PackageLicenseExpression>MIT</PackageLicenseExpression>
+      <Authors>Ashkan Rahmani</Authors>
+      <EmbedUntrackedSources>true</EmbedUntrackedSources>
     </PropertyGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\FastCrud.Abstractions\FastCrud.Abstractions.csproj" />
-      <PackageReference Include="Gridify" />
-    </ItemGroup>
-
-
-    <ItemGroup>
-      <None Include="README.md" Pack="true" PackagePath=""/>
-    </ItemGroup>
+  <ItemGroup>
+    <!-- Reference to the core project for access to SimpleQueryEngine -->
+    <ProjectReference Include="..\FastCrud.Core\FastCrud.Core.csproj" />
+    <!-- DI abstractions for service registration -->
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+  </ItemGroup>
 
 </Project>

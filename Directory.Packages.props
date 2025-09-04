@@ -4,13 +4,18 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="Mapster" Version="7.4.0" />
-    <PackageVersion Include="FluentValidation" Version="12.0.0" />
-    <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0" />
-    <PackageVersion Include="Gridify" Version="2.16.3" />
+    <PackageVersion Include="FluentValidation" Version="12.0.4" />
+    <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.4" />
+    <PackageVersion Include="Gridify" Version="2.14.0" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.0" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0" />
+    <!-- Options pattern support. Required for DI extensions that depend on IOptions<T>. -->
     <PackageVersion Include="Microsoft.Extensions.Options" Version="9.0.0" />
+    <!-- Additional packages for the sample API: InMemory database and Swagger/OpenAPI support -->
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.8" />
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="9.0.4" />
+    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
   </ItemGroup>
 </Project>

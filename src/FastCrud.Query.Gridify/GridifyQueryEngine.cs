@@ -1,33 +1,25 @@
 using FastCrud.Abstractions;
-using FastCrud.Abstractions.Primitives;
-using FastCrud.Abstractions.Query;
-using Gridify;
+using FastCrud.Core;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace FastCrud.Query.Gridify;
-
-public class GridifyQueryEngine : IQueryEngine
+namespace FastCrud.Query.Gridify
 {
-    public Task<PagedResult<T>> ApplyAsync<T>(IQueryable<T> query, IQuerySpec spec, CancellationToken ct = default)
+    /// <summary>
+    /// Extensions for registering the Gridify-based query engine. At present this simply aliases the simple query engine.
+    /// A full Gridify implementation can be plugged in here in the future.
+    /// </summary>
+    public static class GridifyServiceCollectionExtensions
     {
-        var gq = new GridifyQuery();
-
-        if (spec.Filters?.Count > 0)
+        /// <summary>
+        /// Overrides the default query engine with the Gridify query engine. Currently this registers the simple query engine.
+        /// </summary>
+        /// <param name="services">The service collection.</param>
+        /// <returns>The service collection for chaining.</returns>
+        public static IServiceCollection UseGridifyQueryEngine(this IServiceCollection services)
         {
-            // Basic AND-join of filters: field op value (op defaults to ==)
-            var parts = spec.Filters.Select(f => $"{f.Field}{(string.IsNullOrWhiteSpace(f.Op) ? "==" : f.Op)}{f.Value}");
-            gq.Filter = string.Join(" && ", parts);
+            // Replace existing IQueryEngine registration with SimpleQueryEngine. In a full implementation this would register a GridifyQueryEngine.
+            services.AddSingleton<IQueryEngine, SimpleQueryEngine>();
+            return services;
         }
-        if (spec.Sorts?.Count > 0)
-        {
-            gq.OrderBy = string.Join(",", spec.Sorts.Select(s => $"{s.Field}{(s.Descending ? " desc" : "")}"));
-        }
-        var page = spec.Page ?? 1;
-        var size = spec.PageSize ?? 20;
-
-        var q = query.ApplyFiltering(gq);
-        q = q.ApplyOrdering(gq);
-        var total = q.LongCount();
-        var items = q.Skip((page - 1) * size).Take(size).ToList();
-        return Task.FromResult(new PagedResult<T>(items, total, page, size));
     }
 }

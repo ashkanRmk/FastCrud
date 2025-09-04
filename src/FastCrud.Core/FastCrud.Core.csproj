@@ -1,38 +1,22 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
     <PropertyGroup>
       <TargetFramework>net9.0</TargetFramework>
       <Nullable>enable</Nullable>
       <ImplicitUsings>enable</ImplicitUsings>
       <LangVersion>latest</LangVersion>
-      <Deterministic>true</Deterministic>
-      <GenerateDocumentationFile>true</GenerateDocumentationFile>
-      <Description>Core CRUD orchestration over abstractions.</Description>
       <PackageId>FastCrud.Core</PackageId>
-      <Authors>Ashkan Rahmani</Authors>
-      <PackageProjectUrl>https://github.com/ashkanRmk/FastCrud</PackageProjectUrl>
-      <RepositoryUrl>https://github.com/ashkanRmk/FastCrud</RepositoryUrl>
-      <RepositoryType>git</RepositoryType>
-      <PackageLicenseExpression>MIT</PackageLicenseExpression>
-      <IncludeSymbols>true</IncludeSymbols>
-      <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-      <PublishRepositoryUrl>true</PublishRepositoryUrl>
-      <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
-      <EmbedUntrackedSources>true</EmbedUntrackedSources>
+      <Description>Core CRUD orchestration over abstractions.</Description>
       <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-      <PackageReadmeFile>README.md</PackageReadmeFile>
-
+      <PublishRepositoryUrl>true</PublishRepositoryUrl>
+      <PackageLicenseExpression>MIT</PackageLicenseExpression>
+      <Authors>Ashkan Rahmani</Authors>
+      <EmbedUntrackedSources>true</EmbedUntrackedSources>
     </PropertyGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\FastCrud.Abstractions\FastCrud.Abstractions.csproj" />
-      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
-        <PackageReference Include="Microsoft.Extensions.Options" />
-    </ItemGroup>
-
-
-    <ItemGroup>
-      <None Include="README.md" Pack="true" PackagePath=""/>
-    </ItemGroup>
+  <!-- Reference the options pattern and DI abstractions used in the core services. -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Options" />
+  </ItemGroup>
 
 </Project>

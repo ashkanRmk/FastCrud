@@ -1,61 +1,104 @@
 using FastCrud.Abstractions;
-using FastCrud.Abstractions.Primitives;
-using FastCrud.Abstractions.Query;
-using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace FastCrud.Core.Services;
-
-public class CrudService<TAgg, TId> : ICrudService<TAgg, TId>
+namespace FastCrud.Core.Services
 {
-    private readonly IRepository<TAgg, TId> _repo;
-    private readonly IQueryEngine _queryEngine;
-    private readonly IServiceProvider _sp;
-
-    public CrudService(IRepository<TAgg, TId> repo, IQueryEngine queryEngine, IServiceProvider sp)
+    /// <summary>
+    /// Default implementation of <see cref="ICrudService{TAgg, TId}"/> that orchestrates mapping, validation, querying and persistence.
+    /// </summary>
+    /// <typeparam name="TAgg">Aggregate type.</typeparam>
+    /// <typeparam name="TId">Identifier type.</typeparam>
+    public class CrudService<TAgg, TId> : ICrudService<TAgg, TId>
     {
-        _repo = repo;
-        _queryEngine = queryEngine;
-        _sp = sp;
-    }
+        private readonly IRepository<TAgg, TId> _repository;
+        private readonly IObjectMapper _mapper;
+        private readonly IEnumerable<IModelValidator<TAgg>> _validators;
+        private readonly IQueryEngine _queryEngine;
 
-    public async Task<TAgg> CreateAsync(TAgg entity, CancellationToken ct = default)
-    {
-        var validator = _sp.GetService<IModelValidator<TAgg>>();
-        if (validator is not null)
+        /// <summary>
+        /// Creates a new <see cref="CrudService{TAgg, TId}"/>.
+        /// </summary>
+        /// <param name="repository">Repository used for data access.</param>
+        /// <param name="mapper">Object mapper used to convert DTOs to aggregates.</param>
+        /// <param name="validators">Zero or more validators for the aggregate.</param>
+        /// <param name="queryEngine">Engine to apply paging, filtering and sorting.</param>
+        public CrudService(IRepository<TAgg, TId> repository, IObjectMapper mapper, IEnumerable<IModelValidator<TAgg>> validators, IQueryEngine queryEngine)
         {
-            var vr = await validator.ValidateAsync(entity, ct);
-            if (!vr.IsValid) throw new InvalidOperationException($"Validation failed: {string.Join(',', vr.Errors.Select(e => e.Field+":"+e.Message))}");
+            _repository = repository;
+            _mapper = mapper;
+            _validators = validators;
+            _queryEngine = queryEngine;
         }
-        var created = await _repo.AddAsync(entity, ct);
-        await _repo.SaveChangesAsync(ct);
-        return created;
-    }
 
-    public async Task DeleteAsync(TId id, CancellationToken ct = default)
-    {
-        var entity = await _repo.FindAsync(id, ct) ?? throw new KeyNotFoundException("Not found");
-        await _repo.DeleteAsync(entity, ct);
-        await _repo.SaveChangesAsync(ct);
-    }
-
-    public async Task<TAgg?> GetAsync(TId id, CancellationToken ct = default)
-        => await _repo.FindAsync(id, ct);
-
-    public async Task<PagedResult<TAgg>> QueryAsync(IQuerySpec spec, CancellationToken ct = default)
-        => await _queryEngine.ApplyAsync(_repo.Query(), spec, ct);
-
-    public async Task<TAgg> UpdateAsync(TId id, object patch, CancellationToken ct = default)
-    {
-        var entity = await _repo.FindAsync(id, ct) ?? throw new KeyNotFoundException("Not found");
-        // Simple map-onto for now (adapter can do better mapping)
-        var mapper = _sp.GetService<IObjectMapper>();
-        if (mapper is not null)
+        /// <inheritdoc />
+        public async Task<TAgg> CreateAsync(object input, CancellationToken cancellationToken)
         {
-            var updated = mapper.Map<TAgg>(patch);
-            entity = updated;
+            if (input == null) throw new ArgumentNullException(nameof(input));
+            // map input to new aggregate instance
+            TAgg entity = input is TAgg agg ? agg : _mapper.Map<TAgg>(input);
+            // validate if any validators are registered
+            foreach (var validator in _validators)
+            {
+                await validator.ValidateAsync(entity, cancellationToken);
+            }
+            await _repository.AddAsync(entity, cancellationToken);
+            await _repository.SaveChangesAsync(cancellationToken);
+            return entity;
         }
-        entity = await _repo.UpdateAsync(entity, ct);
-        await _repo.SaveChangesAsync(ct);
-        return entity;
+
+        /// <inheritdoc />
+        public async Task DeleteAsync(TId id, CancellationToken cancellationToken)
+        {
+            var entity = await _repository.FindAsync(id, cancellationToken);
+            if (entity != null)
+            {
+                await _repository.DeleteAsync(entity, cancellationToken);
+                await _repository.SaveChangesAsync(cancellationToken);
+            }
+        }
+
+        /// <inheritdoc />
+        public async Task<TAgg?> GetAsync(TId id, CancellationToken cancellationToken)
+        {
+            return await _repository.FindAsync(id, cancellationToken);
+        }
+
+        /// <inheritdoc />
+        public async Task<PagedResult<TAgg>> QueryAsync(IQuerySpec spec, CancellationToken cancellationToken)
+        {
+            var query = _repository.Query();
+            return await _queryEngine.ApplyQueryAsync(query, spec, cancellationToken);
+        }
+
+        /// <inheritdoc />
+        public async Task<TAgg> UpdateAsync(TId id, object input, CancellationToken cancellationToken)
+        {
+            if (input == null) throw new ArgumentNullException(nameof(input));
+            var entity = await _repository.FindAsync(id, cancellationToken);
+            if (entity == null)
+            {
+                throw new InvalidOperationException($"{typeof(TAgg).Name} with id {id} not found");
+            }
+            // map input onto existing entity
+            if (input is TAgg agg)
+            {
+                _mapper.Map(agg, entity);
+            }
+            else
+            {
+                _mapper.Map(input, entity);
+            }
+            // validate
+            foreach (var validator in _validators)
+            {
+                await validator.ValidateAsync(entity, cancellationToken);
+            }
+            await _repository.SaveChangesAsync(cancellationToken);
+            return entity;
+        }
     }
 }

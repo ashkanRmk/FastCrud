@@ -1,42 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
     <PropertyGroup>
       <TargetFramework>net9.0</TargetFramework>
       <Nullable>enable</Nullable>
       <ImplicitUsings>enable</ImplicitUsings>
       <LangVersion>latest</LangVersion>
-      <Deterministic>true</Deterministic>
-      <GenerateDocumentationFile>true</GenerateDocumentationFile>
-      <Description>Minimal API endpoint mappings for FastCrud.</Description>
       <PackageId>FastCrud.Web.MinimalApi</PackageId>
-      <Authors>Ashkan Rahmani</Authors>
-      <Company></Company>
-      <PackageProjectUrl>https://github.com/ashkanRmk/FastCrud</PackageProjectUrl>
-      <RepositoryUrl>https://github.com/ashkanRmk/FastCrud</RepositoryUrl>
-      <RepositoryType>git</RepositoryType>
-      <PackageLicenseExpression>MIT</PackageLicenseExpression>
-      <IncludeSymbols>true</IncludeSymbols>
-      <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-      <PublishRepositoryUrl>true</PublishRepositoryUrl>
-      <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
-      <EmbedUntrackedSources>true</EmbedUntrackedSources>
+      <Description>Minimal API endpoint mappings for FastCrud.</Description>
       <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-      <PackageReadmeFile>README.md</PackageReadmeFile>
-
+      <PublishRepositoryUrl>true</PublishRepositoryUrl>
+      <PackageLicenseExpression>MIT</PackageLicenseExpression>
+      <Authors>Ashkan Rahmani</Authors>
+      <EmbedUntrackedSources>true</EmbedUntrackedSources>
     </PropertyGroup>
-
-
-    <ItemGroup>
-      <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\FastCrud.Abstractions\FastCrud.Abstractions.csproj" />
-    </ItemGroup>
-
-
-    <ItemGroup>
-      <None Include="README.md" Pack="true" PackagePath=""/>
-    </ItemGroup>
 
 </Project>
