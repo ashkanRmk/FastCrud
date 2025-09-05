@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+      <TargetFramework>net9.0</TargetFramework>
+      <Nullable>enable</Nullable>
+      <ImplicitUsings>enable</ImplicitUsings>
+      <LangVersion>latest</LangVersion>
+      <PackageId>FastCrud.Mapping.Mapster</PackageId>
+      <Description>Mapster adapter for FastCrud.</Description>
+      <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+      <PublishRepositoryUrl>true</PublishRepositoryUrl>
+      <PackageLicenseExpression>MIT</PackageLicenseExpression>
+      <Authors>Ashkan Rahmani</Authors>
+      <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Mapster core library for mapping -->
+    <PackageReference Include="Mapster" />
+    <!-- DI abstractions for service registration -->
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FastCrud.Abstractions\FastCrud.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>

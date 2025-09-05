@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+      <TargetFramework>net9.0</TargetFramework>
+      <Nullable>enable</Nullable>
+      <ImplicitUsings>enable</ImplicitUsings>
+      <LangVersion>latest</LangVersion>
+      <PackageId>FastCrud.Web.MinimalApi</PackageId>
+      <Description>Minimal API endpoint mappings for FastCrud.</Description>
+      <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+      <PublishRepositoryUrl>true</PublishRepositoryUrl>
+      <PackageLicenseExpression>MIT</PackageLicenseExpression>
+      <Authors>Ashkan Rahmani</Authors>
+      <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Mapster" />
+      <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <ProjectReference Include="..\FastCrud.Abstractions\FastCrud.Abstractions.csproj" />
+    </ItemGroup>
+
+</Project>

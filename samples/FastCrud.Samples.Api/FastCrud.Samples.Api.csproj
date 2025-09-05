@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\FastCrud.Core\FastCrud.Core.csproj" />
+    <ProjectReference Include="..\..\src\FastCrud.Persistence.EFCore\FastCrud.Persistence.EFCore.csproj" />
+    <ProjectReference Include="..\..\src\FastCrud.Mapping.Mapster\FastCrud.Mapping.Mapster.csproj" />
+    <ProjectReference Include="..\..\src\FastCrud.Query.Gridify\FastCrud.Query.Gridify.csproj" />
+    <ProjectReference Include="..\..\src\FastCrud.Validation.FluentValidation\FastCrud.Validation.FluentValidation.csproj" />
+    <ProjectReference Include="..\..\src\FastCrud.Web.MinimalApi\FastCrud.Web.MinimalApi.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
+    <PackageReference Include="Swashbuckle.AspNetCore" />
+    <PackageReference Include="FluentValidation" />
+  </ItemGroup>
+
+</Project>

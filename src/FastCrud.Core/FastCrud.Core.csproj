@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+      <TargetFramework>net9.0</TargetFramework>
+      <Nullable>enable</Nullable>
+      <ImplicitUsings>enable</ImplicitUsings>
+      <LangVersion>latest</LangVersion>
+      <PackageId>FastCrud.Core</PackageId>
+      <Description>Core CRUD orchestration over abstractions.</Description>
+      <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+      <PublishRepositoryUrl>true</PublishRepositoryUrl>
+      <PackageLicenseExpression>MIT</PackageLicenseExpression>
+      <Authors>Ashkan Rahmani</Authors>
+      <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Options" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FastCrud.Abstractions\FastCrud.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>
