@@ -31,7 +31,7 @@ public static class ServiceCollectionExtensions
             var callingAssembly = Assembly.GetCallingAssembly();
             services.AddValidatorsFromAssembly(callingAssembly);
         }
-        
+
         // bridge IModelValidator<T> to FluentValidation
         services.AddTransient(typeof(IModelValidator<>), typeof(FluentValidationModelValidator<>));
         return services;

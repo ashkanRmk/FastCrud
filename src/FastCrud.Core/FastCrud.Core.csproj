@@ -13,7 +13,6 @@
       <EmbedUntrackedSources>true</EmbedUntrackedSources>
     </PropertyGroup>
 
-  <!-- Reference the options pattern and DI abstractions used in the core services. -->
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
     <PackageReference Include="Microsoft.Extensions.Options" />
@@ -22,5 +21,5 @@
   <ItemGroup>
     <ProjectReference Include="..\FastCrud.Abstractions\FastCrud.Abstractions.csproj" />
   </ItemGroup>
-  
+
 </Project>

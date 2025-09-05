@@ -7,17 +7,14 @@ namespace FastCrud.Validation.FluentValidation
     /// Adapter that bridges FluentValidation validators to the <see cref="IModelValidator{T}"/> abstraction used by FastCrud.
     /// </summary>
     /// <typeparam name="T">Type being validated.</typeparam>
-    public sealed class FluentValidationModelValidator<T> : IModelValidator<T>
+    /// <remarks>
+    /// Initializes a new instance with the supplied FluentValidation validator.
+    /// </remarks>
+    /// <param name="validator">Concrete validator.</param>
+    public sealed class FluentValidationModelValidator<T>(IValidator<T> validator) : IModelValidator<T>
     {
-        private readonly IValidator<T> _validator;
-        /// <summary>
-        /// Initializes a new instance with the supplied FluentValidation validator.
-        /// </summary>
-        /// <param name="validator">Concrete validator.</param>
-        public FluentValidationModelValidator(IValidator<T> validator)
-        {
-            _validator = validator;
-        }
+        private readonly IValidator<T> _validator = validator;
+
         /// <inheritdoc />
         public async Task ValidateAsync(T model, CancellationToken cancellationToken)
         {

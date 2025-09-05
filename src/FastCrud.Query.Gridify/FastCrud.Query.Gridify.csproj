@@ -14,13 +14,11 @@
     </PropertyGroup>
 
   <ItemGroup>
-    <!-- Reference to the core project for access to SimpleQueryEngine -->
-    <ProjectReference Include="..\FastCrud.Core\FastCrud.Core.csproj" />
-    <!-- DI abstractions for service registration -->
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FastCrud.Core\FastCrud.Core.csproj" />
     <ProjectReference Include="..\FastCrud.Abstractions\FastCrud.Abstractions.csproj" />
   </ItemGroup>
 

@@ -14,10 +14,8 @@
     </PropertyGroup>
 
   <ItemGroup>
-    <!-- FluentValidation core and DI extensions -->
     <PackageReference Include="FluentValidation" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
-    <!-- DI abstractions for service registration -->
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
   </ItemGroup>
 

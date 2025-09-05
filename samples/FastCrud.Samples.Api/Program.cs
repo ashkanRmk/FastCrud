@@ -1,17 +1,11 @@
-using FastCrud.Abstractions;
 using FastCrud.Abstractions.Abstractions;
-using FastCrud.Core;
 using FastCrud.Core.DI;
-using FastCrud.Mapping.Mapster;
 using FastCrud.Mapping.Mapster.DI;
-using FastCrud.Persistence.EFCore;
 using FastCrud.Persistence.EFCore.DI;
-using FastCrud.Query.Gridify;
 using FastCrud.Query.Gridify.DI;
 using FastCrud.Samples.Api.Data;
 using FastCrud.Samples.Api.Dtos;
 using FastCrud.Samples.Api.Models;
-using FastCrud.Validation.FluentValidation;
 using FastCrud.Validation.FluentValidation.DI;
 using FastCrud.Web.MinimalApi;
 using Microsoft.EntityFrameworkCore;
@@ -26,7 +20,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // FastCrud core services
 builder.Services.AddFastCrudCore();
 
-// Mapster configuration: map DTOs onto entities. Use Mapster's cloning of global settings.
+// Mapster configuration: map DTOs onto entities.
 builder.Services.UseMapster(cfg =>
 {
     cfg.NewConfig<CustomerCreateDto, Customer>();
@@ -45,7 +39,6 @@ builder.Services.UseFluentValidationAdapter(typeof(Program).Assembly);
 builder.Services.AddEfRepository<Customer, Guid, AppDbContext>();
 builder.Services.AddEfRepository<Order, Guid, AppDbContext>();
 
-// Swagger/OpenAPI for UI and docs
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
