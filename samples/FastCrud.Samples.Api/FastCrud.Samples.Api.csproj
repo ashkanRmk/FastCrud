@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\FastCrud.Abstractions\FastCrud.Abstractions.csproj" />
     <ProjectReference Include="..\..\src\FastCrud.Core\FastCrud.Core.csproj" />
     <ProjectReference Include="..\..\src\FastCrud.Persistence.EFCore\FastCrud.Persistence.EFCore.csproj" />
     <ProjectReference Include="..\..\src\FastCrud.Mapping.Mapster\FastCrud.Mapping.Mapster.csproj" />

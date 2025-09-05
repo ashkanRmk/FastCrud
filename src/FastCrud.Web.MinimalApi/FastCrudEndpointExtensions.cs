@@ -29,19 +29,23 @@ namespace FastCrud.Web.MinimalApi
         {
             var prefix = routePrefix.StartsWith('/') ?  routePrefix : $"/{routePrefix}";
             var group = builder.MapGroup(prefix).WithTags($"{typeof(TAgg).Name}s");
+            
             // list/query
-            group.MapGet("/", async ([AsParameters] QuerySpec spec, 
+            group.MapGet("/", async (
+                    [AsParameters] QuerySpec spec, 
                     ICrudService<TAgg, TId> svc,
                     CancellationToken ct) =>
             {
                 var page = await svc.QueryAsync<TReadDto>(spec, q => q.ProjectToType<TReadDto>(), ct);
-                // var result = await svc.QueryAsync(spec, ct);
                 return Results.Ok(page);
             })
             .WithName($"List{typeof(TAgg).Name}s");
 
             // get by id
-            group.MapGet("/{id}", async (TId id, ICrudService<TAgg, TId> svc, CancellationToken ct) =>
+            group.MapGet("/{id}", async (
+                    TId id, 
+                    ICrudService<TAgg, TId> svc, 
+                    CancellationToken ct) =>
             {
                 var entity = await svc.GetAsync(id, ct);
                 return entity is null ? Results.NotFound() : Results.Ok(entity);
@@ -49,7 +53,10 @@ namespace FastCrud.Web.MinimalApi
             .WithName($"Get{typeof(TAgg).Name}");
 
             // create
-            group.MapPost("/", async ([FromBody] object dto, ICrudService<TAgg, TId> svc, CancellationToken ct) =>
+            group.MapPost("/", async (
+                    [FromBody] object dto, 
+                    ICrudService<TAgg, TId> svc, 
+                    CancellationToken ct) =>
             {
                 var created = await svc.CreateAsync(dto, ct);
                 return Results.Ok(created);
@@ -57,7 +64,11 @@ namespace FastCrud.Web.MinimalApi
             .WithName($"Create{typeof(TAgg).Name}");
 
             // update
-            group.MapPut("/{id}", async (TId id, [FromBody] object dto, ICrudService<TAgg, TId> svc, CancellationToken ct) =>
+            group.MapPut("/{id}", async (
+                    TId id,
+                    [FromBody] object dto, 
+                    ICrudService<TAgg, TId> svc,
+                    CancellationToken ct) =>
             {
                 var updated = await svc.UpdateAsync(id, dto, ct);
                 return Results.Ok(updated);
@@ -65,7 +76,10 @@ namespace FastCrud.Web.MinimalApi
             .WithName($"Update{typeof(TAgg).Name}");
 
             // delete
-            group.MapDelete("/{id}", async (TId id, ICrudService<TAgg, TId> svc, CancellationToken ct) =>
+            group.MapDelete("/{id}", async (
+                    TId id, 
+                    ICrudService<TAgg, TId> svc,
+                    CancellationToken ct) =>
             {
                 await svc.DeleteAsync(id, ct);
                 return Results.NoContent();

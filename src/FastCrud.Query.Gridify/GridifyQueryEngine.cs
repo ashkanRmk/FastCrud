@@ -1,16 +1,17 @@
 using Gridify;
 using FastCrud.Abstractions.Primitives;
 using FastCrud.Abstractions.Query;
+using Microsoft.EntityFrameworkCore;
 
 namespace FastCrud.Query.Gridify;
 
 public sealed class GridifyQueryEngine(IGridifyMapperProvider mappers) : IQueryEngine
 {
-    public Task<PagedResult<TOut>> ApplyQueryAsync<TIn, TOut>(
+    public async Task<PagedResult<TOut>> ApplyQueryAsync<TIn, TOut>(
         IQueryable<TIn> source, 
         IQuerySpec spec, 
         Func<IQueryable<TIn>, IQueryable<TOut>> projector, 
-        CancellationToken ct = default)
+        CancellationToken cancellationToken = default)
     {
         var gq = new GridifyQuery
         {
@@ -34,9 +35,9 @@ public sealed class GridifyQueryEngine(IGridifyMapperProvider mappers) : IQueryE
             source = source.ApplyPaging(gq);
 
         var projected = projector(source);
-        var items = projected.ToList();
+        var items = await projected.ToListAsync(cancellationToken);
 
         var result = new PagedResult<TOut>(items, total, gq.Page, gq.PageSize);
-        return Task.FromResult(result);
+        return result;
     }
 }

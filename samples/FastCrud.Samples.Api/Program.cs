@@ -1,4 +1,3 @@
-using FastCrud.Abstractions.Abstractions;
 using FastCrud.Core.DI;
 using FastCrud.Mapping.Mapster.DI;
 using FastCrud.Persistence.EFCore.DI;
