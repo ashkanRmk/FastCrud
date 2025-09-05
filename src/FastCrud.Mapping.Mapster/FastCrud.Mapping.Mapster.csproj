@@ -14,9 +14,7 @@
     </PropertyGroup>
 
   <ItemGroup>
-    <!-- Mapster core library for mapping -->
     <PackageReference Include="Mapster" />
-    <!-- DI abstractions for service registration -->
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
   </ItemGroup>
 
