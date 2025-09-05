@@ -33,10 +33,10 @@ namespace FastCrud.Core
             }
 
             // sorting: "Prop" for ascending, "-Prop" for descending, comma-separated
-            if (!string.IsNullOrWhiteSpace(spec.Sort))
+            if (!string.IsNullOrWhiteSpace(spec.OrderBy))
             {
                 bool first = true;
-                foreach (var part in spec.Sort.Split(',', StringSplitOptions.RemoveEmptyEntries))
+                foreach (var part in spec.OrderBy.Split(',', StringSplitOptions.RemoveEmptyEntries))
                 {
                     var trimmed = part.Trim();
                     if (string.IsNullOrEmpty(trimmed)) continue;

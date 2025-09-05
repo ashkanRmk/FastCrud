@@ -23,5 +23,5 @@ public interface IQuerySpec
     /// <summary>
     /// Gets or sets an optional sort expression. Comma-separated list of property names; prefix with '-' for descending order.
     /// </summary>
-    string? Sort { get; set; }
+    string? OrderBy { get; set; }
 }

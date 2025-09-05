@@ -8,6 +8,7 @@ using FastCrud.Samples.Api.Dtos;
 using FastCrud.Samples.Api.Models;
 using FastCrud.Validation.FluentValidation.DI;
 using FastCrud.Web.MinimalApi;
+using Gridify;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -29,8 +30,13 @@ builder.Services.UseMapster(cfg =>
     cfg.NewConfig<OrderUpdateDto, Order>();
 });
 
-// Query engine: register a Gridify-based engine. Currently uses SimpleQueryEngine under the hood.
+// Query engine: register a Gridify-based engine.
 builder.Services.UseGridifyQueryEngine();
+
+var customerMapper = new GridifyMapper<Customer>()
+    .GenerateMappings()
+    .AddMap("name", x => x.FirstName + " " + x.LastName);
+builder.Services.AddGridifyMapperFor(customerMapper);
 
 // FluentValidation: scan validators in this assembly and bridge to IModelValidator<T>.
 builder.Services.UseFluentValidationAdapter(typeof(Program).Assembly);

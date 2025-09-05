@@ -15,5 +15,5 @@ public class QuerySpec : IQuerySpec
     public string? Filter { get; set; }
 
     /// <inheritdoc />
-    public string? Sort { get; set; }
+    public string? OrderBy { get; set; }
 }
