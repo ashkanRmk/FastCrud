@@ -13,12 +13,10 @@ namespace FastCrud.Validation.FluentValidation
     /// <param name="validator">Concrete validator.</param>
     public sealed class FluentValidationModelValidator<T>(IValidator<T> validator) : IModelValidator<T>
     {
-        private readonly IValidator<T> _validator = validator;
-
         /// <inheritdoc />
         public async Task ValidateAsync(T model, CancellationToken cancellationToken)
         {
-            var result = await _validator.ValidateAsync(model, cancellationToken);
+            var result = await validator.ValidateAsync(model, cancellationToken);
             if (!result.IsValid)
             {
                 // throw an exception with all validation errors

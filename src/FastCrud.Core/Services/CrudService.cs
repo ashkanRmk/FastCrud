@@ -40,14 +40,16 @@ namespace FastCrud.Core.Services
         /// <inheritdoc />
         public async Task<TAgg> CreateAsync(object input, CancellationToken cancellationToken)
         {
-            if (input == null) throw new ArgumentNullException(nameof(input));
+            ArgumentNullException.ThrowIfNull(input);
             // map input to new aggregate instance
-            TAgg entity = input is TAgg agg ? agg : _mapper.Map<TAgg>(input);
+            var entity = input is TAgg agg ? agg : _mapper.Map<TAgg>(input);
+            
             // validate if any validators are registered
             foreach (var validator in _validators)
             {
                 await validator.ValidateAsync(entity, cancellationToken);
             }
+            
             await _repository.AddAsync(entity, cancellationToken);
             await _repository.SaveChangesAsync(cancellationToken);
             return entity;
@@ -80,12 +82,13 @@ namespace FastCrud.Core.Services
         /// <inheritdoc />
         public async Task<TAgg> UpdateAsync(TId id, object input, CancellationToken cancellationToken)
         {
-            if (input == null) throw new ArgumentNullException(nameof(input));
+            ArgumentNullException.ThrowIfNull(input);
             var entity = await _repository.FindAsync(id, cancellationToken);
             if (entity == null)
             {
                 throw new InvalidOperationException($"{typeof(TAgg).Name} with id {id} not found");
             }
+            
             // map input onto existing entity
             if (input is TAgg agg)
             {
@@ -95,11 +98,13 @@ namespace FastCrud.Core.Services
             {
                 _mapper.Map(input, entity);
             }
+            
             // validate
             foreach (var validator in _validators)
             {
                 await validator.ValidateAsync(entity, cancellationToken);
             }
+            
             await _repository.SaveChangesAsync(cancellationToken);
             return entity;
         }

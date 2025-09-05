@@ -23,7 +23,7 @@ namespace FastCrud.Web.MinimalApi
         /// <returns>The route builder for chaining.</returns>
         public static IEndpointRouteBuilder MapFastCrud<TAgg, TId>(this IEndpointRouteBuilder builder, string routePrefix)
         {
-            var group = builder.MapGroup(routePrefix);
+            var group = builder.MapGroup(routePrefix).WithTags($"{typeof(TAgg).Name}s");
             // list/query
             group.MapGet("/", async ([AsParameters] QuerySpec spec, ICrudService<TAgg, TId> svc, CancellationToken ct) =>
             {
