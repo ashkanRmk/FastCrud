@@ -1,11 +1,9 @@
-using FastCrud.Abstractions;
-using FastCrud.Core.Services;
-using Microsoft.Extensions.DependencyInjection;
-using System;
 using FastCrud.Abstractions.Abstractions;
 using FastCrud.Abstractions.Query;
+using FastCrud.Core.Services;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace FastCrud.Core
+namespace FastCrud.Core.DI
 {
     /// <summary>
     /// Service registration extensions for the FastCrud core services.

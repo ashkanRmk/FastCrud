@@ -3,12 +3,12 @@ using FastCrud.Abstractions.Abstractions;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FastCrud.Validation.FluentValidation;
+namespace FastCrud.Validation.FluentValidation.DI;
 
 /// <summary>
 /// Service registration helpers for FluentValidation integration.
 /// </summary>
-public static class FluentValidationServiceCollectionExtensions
+public static class ServiceCollectionExtensions
 {
     /// <summary>
     /// Registers FluentValidation validators from the specified assemblies and configures them as the model validators for FastCrud.

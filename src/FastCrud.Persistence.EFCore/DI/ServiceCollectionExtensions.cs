@@ -1,14 +1,13 @@
-using FastCrud.Abstractions;
 using FastCrud.Abstractions.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FastCrud.Persistence.EFCore;
+namespace FastCrud.Persistence.EFCore.DI;
 
 /// <summary>
 /// Extensions for registering EF repositories with the DI container.
 /// </summary>
-public static class EfRepositoryServiceCollectionExtensions
+public static class ServiceCollectionExtensions
 {
     /// <summary>
     /// Registers an EF repository for the specified aggregate type and database context. When invoked, resolves

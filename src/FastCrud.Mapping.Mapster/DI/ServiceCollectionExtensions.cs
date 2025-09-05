@@ -1,14 +1,13 @@
-using FastCrud.Abstractions;
 using FastCrud.Abstractions.Abstractions;
 using Mapster;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FastCrud.Mapping.Mapster;
+namespace FastCrud.Mapping.Mapster.DI;
 
 /// <summary>
 /// Extension methods for registering Mapster as the object mapper for FastCrud.
 /// </summary>
-public static class MapsterServiceCollectionExtensions
+public static class ServiceCollectionExtensions
 {
     /// <summary>
     /// Registers Mapster with the DI container and configures the global settings. Optionally accepts a configuration action
