@@ -1,4 +1,5 @@
 using FastCrud.Abstractions;
+using FastCrud.Abstractions.Abstractions;
 using Mapster;
 using Microsoft.Extensions.DependencyInjection;
 

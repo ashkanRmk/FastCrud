@@ -1,4 +1,5 @@
 using FastCrud.Abstractions;
+using FastCrud.Abstractions.Abstractions;
 using FastCrud.Core;
 using FastCrud.Mapping.Mapster;
 using FastCrud.Persistence.EFCore;
@@ -11,8 +12,6 @@ using FastCrud.Web.MinimalApi;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
-// Build the WebApplication. This sample demonstrates a fully wired FastCrud setup with
-// Mapster mapping, FluentValidation validation, a simple query engine and EF Core for persistence.
 var builder = WebApplication.CreateBuilder(args);
 
 // In-memory database; replace with SQL Server or other provider in real apps.
@@ -73,12 +72,8 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-// Swagger middleware
 app.UseSwagger();
 app.UseSwaggerUI();
-
-// Health endpoint
-app.MapGet("/", () => Results.Ok(new { ok = true, ts = DateTimeOffset.UtcNow }));
 
 // Map CRUD endpoints for entities using FastCrud. The route prefixes must begin with '/'.
 app.MapFastCrud<Customer, Guid>("/api/customers");
@@ -109,5 +104,4 @@ app.MapPut("/api/orders-dto/{id:guid}", async (Guid id, OrderUpdateDto dto, ICru
     return Results.Ok(entity);
 }).WithName("UpdateOrderDto").WithTags("Orders");
 
-// Run the application
 app.Run();

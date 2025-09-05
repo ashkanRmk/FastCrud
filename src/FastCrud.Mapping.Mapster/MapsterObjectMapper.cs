@@ -1,6 +1,7 @@
 using FastCrud.Abstractions;
 using Mapster;
 using System;
+using FastCrud.Abstractions.Abstractions;
 
 namespace FastCrud.Mapping.Mapster
 {

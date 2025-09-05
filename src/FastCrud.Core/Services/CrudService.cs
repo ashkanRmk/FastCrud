@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using FastCrud.Abstractions.Abstractions;
 using FastCrud.Abstractions.Primitives;
+using FastCrud.Abstractions.Query;
 
 namespace FastCrud.Core.Services
 {

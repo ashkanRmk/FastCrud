@@ -1,4 +1,6 @@
 using FastCrud.Abstractions;
+using FastCrud.Abstractions.Abstractions;
+using FastCrud.Abstractions.Query;
 using FastCrud.Core;
 using Microsoft.Extensions.DependencyInjection;
 

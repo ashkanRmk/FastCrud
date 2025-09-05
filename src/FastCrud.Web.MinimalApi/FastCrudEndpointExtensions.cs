@@ -1,4 +1,6 @@
 using FastCrud.Abstractions;
+using FastCrud.Abstractions.Abstractions;
+using FastCrud.Abstractions.Query;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

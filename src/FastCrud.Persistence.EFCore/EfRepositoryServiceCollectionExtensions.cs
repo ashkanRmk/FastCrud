@@ -1,4 +1,5 @@
 using FastCrud.Abstractions;
+using FastCrud.Abstractions.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 

@@ -2,6 +2,8 @@ using FastCrud.Abstractions;
 using FastCrud.Core.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using FastCrud.Abstractions.Abstractions;
+using FastCrud.Abstractions.Query;
 
 namespace FastCrud.Core
 {
@@ -21,24 +23,12 @@ namespace FastCrud.Core
         public static IServiceCollection AddFastCrudCore(this IServiceCollection services, Action<FastCrudOptions>? configure = null)
         {
             services.AddScoped(typeof(ICrudService<,>), typeof(CrudService<,>));
-            services.AddSingleton<IFastCrudClock, FastCrudClock>();
+            
             // register default simple query engine; can be overridden via UseGridifyQueryEngine
             services.AddSingleton<IQueryEngine, SimpleQueryEngine>();
+            
             configure?.Invoke(new FastCrudOptions());
             return services;
         }
-    }
-
-    /// <summary>
-    /// Options for FastCrud. Reserved for future extensibility.
-    /// </summary>
-    public class FastCrudOptions
-    {
-        // currently empty; reserved for future settings (e.g., soft-delete, auditing)
-    }
-
-    internal class FastCrudClock : IFastCrudClock
-    {
-        public DateTime UtcNow => DateTime.UtcNow;
     }
 }

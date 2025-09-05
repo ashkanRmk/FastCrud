@@ -3,9 +3,6 @@ using FluentValidation;
 
 namespace FastCrud.Samples.Api.Validators
 {
-    /// <summary>
-    /// Validator for <see cref="Customer"/> entities. Ensures required fields are populated and email format is correct.
-    /// </summary>
     public class CustomerValidator : AbstractValidator<Customer>
     {
         public CustomerValidator()

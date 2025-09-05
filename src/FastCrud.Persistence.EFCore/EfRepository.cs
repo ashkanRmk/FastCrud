@@ -1,8 +1,5 @@
-using FastCrud.Abstractions;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+using FastCrud.Abstractions.Abstractions;
 
 namespace FastCrud.Persistence.EFCore
 {
@@ -47,7 +44,7 @@ namespace FastCrud.Persistence.EFCore
         /// <inheritdoc />
         public async Task<TAgg?> FindAsync(TId id, CancellationToken cancellationToken)
         {
-            return await _set.FindAsync(new object[] { id }, cancellationToken);
+            return await _set.FindAsync([id], cancellationToken);
         }
 
         /// <inheritdoc />

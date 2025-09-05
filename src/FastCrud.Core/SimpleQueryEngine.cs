@@ -1,6 +1,6 @@
-using FastCrud.Abstractions;
 using System.Linq.Expressions;
 using FastCrud.Abstractions.Primitives;
+using FastCrud.Abstractions.Query;
 
 namespace FastCrud.Core
 {
