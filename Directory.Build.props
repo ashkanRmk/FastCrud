@@ -1,7 +1,34 @@
 <Project>
   <PropertyGroup>
+    <Version>0.1.0</Version>
+
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
     <AnalysisLevel>latest</AnalysisLevel>
+
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+
+    <IsPackable>true</IsPackable>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>$(MSBuildProjectName)</PackageId>
+    <Authors>Ashkan Rahmani</Authors>
+    <Company>FastCrud</Company>
+    <PackageTags>crud;minimal-api;efcore;fastcrud</PackageTags>
+    <Description>Fast and flexible CRUD API generator for .NET 9: minimal API + EF Core with DTOs, FluentValidation, paging, filtering, sorting and auto‑Swagger</Description>
+    <RepositoryUrl>https://github.com/ashkanRmk/FastCrud</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+<!--    <PackageReadmeFile>README.md</PackageReadmeFile>-->
+
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <Deterministic>true</Deterministic>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+
   </PropertyGroup>
 </Project>
