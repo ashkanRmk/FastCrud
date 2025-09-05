@@ -50,11 +50,11 @@ namespace FastCrud.Web.MinimalApi
             if (ops.HasFlag(CrudOps.Create))
             {
                 group.MapPost("/", async (
-                    [FromBody] object dto,
+                    [FromBody] TCreateDto dto,
                     ICrudService<TAgg, TId> svc,
                     CancellationToken ct) =>
                 {
-                    var created = await svc.CreateAsync(dto, ct);
+                    var created = await svc.CreateAsync(dto!, ct);
                     return Results.Ok(created);
                 })
                 .WithName($"Create{typeof(TAgg).Name}");
@@ -64,11 +64,11 @@ namespace FastCrud.Web.MinimalApi
             {
                 group.MapPut("/{id}", async (
                     TId id,
-                    [FromBody] object dto,
+                    [FromBody] TUpdateDto dto,
                     ICrudService<TAgg, TId> svc,
                     CancellationToken ct) =>
                 {
-                    var updated = await svc.UpdateAsync(id, dto, ct);
+                    var updated = await svc.UpdateAsync(id, dto!, ct);
                     return Results.Ok(updated);
                 })
                 .WithName($"Update{typeof(TAgg).Name}");

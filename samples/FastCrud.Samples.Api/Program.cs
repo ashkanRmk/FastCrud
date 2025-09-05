@@ -60,7 +60,11 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 // Map CRUD endpoints for entities using FastCrud.
-app.MapFastCrud<Customer, Guid, CustomerCreateDto, CustomerUpdateDto, CustomerReadDto>("/api/customers");
-app.MapFastCrud<Order, Guid, OrderCreateDto, OrderUpdateDto, OrderReadDto>("/api/orders", ~CrudOps.Delete);
+app.MapFastCrud<Customer, Guid, CustomerCreateDto, CustomerUpdateDto, CustomerReadDto>(
+    "/api/customers");
+
+app.MapFastCrud<Order, Guid, OrderCreateDto, OrderUpdateDto, OrderReadDto>(
+    "/api/orders", 
+    ~CrudOps.Delete);
 
 app.Run();
