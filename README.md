@@ -1,3 +1,3 @@
-# FastCrud — Package Split Skeleton
+# FastCrud
 
-This folder contains a ready-to-merge split of **FastCrud** into composable NuGet packages.
+Documentation coming soon ...

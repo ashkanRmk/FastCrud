@@ -8,7 +8,7 @@ public sealed class CustomerGridifyProfile : IGridifyMapperProfile<Customer>
 {
     public void Configure(GridifyMapper<Customer> m)
     {
-        // auto-generate mappings, then customize
+        m.Configuration.CaseInsensitiveFiltering = true;
         m.GenerateMappings()
             .AddMap("name", c => c.FirstName + " " + c.LastName)
             .RemoveMap(nameof(Customer.CreatedUtc));
