@@ -1,44 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
-  <!-- This is a sample project demonstrating how to wire up FastCrud in an ASP.NET
-       Core API. It deliberately targets the Web SDK so it can use top‑level
-       statements (Program.cs) and host a minimal API. The output type is set
-       to Exe to satisfy the requirement that a project with top‑level
-       statements must be an executable. The project is not packed into a
-       NuGet package. -->
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <LangVersion>latest</LangVersion>
-    <PackageId>FastCrud.Samples.Api</PackageId>
-    <Description>Sample API to demonstrate wiring FastCrud packages.</Description>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Authors>Ashkan Rahmani</Authors>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <OutputType>Exe</OutputType>
   </PropertyGroup>
 
-  <!-- Reference the FastCrud projects to demonstrate how consumers can wire
-       everything together. Adjust these paths if you move the samples folder. -->
   <ItemGroup>
     <ProjectReference Include="..\..\src\FastCrud.Abstractions\FastCrud.Abstractions.csproj" />
     <ProjectReference Include="..\..\src\FastCrud.Core\FastCrud.Core.csproj" />
+    <ProjectReference Include="..\..\src\FastCrud.Persistence.EFCore\FastCrud.Persistence.EFCore.csproj" />
     <ProjectReference Include="..\..\src\FastCrud.Mapping.Mapster\FastCrud.Mapping.Mapster.csproj" />
     <ProjectReference Include="..\..\src\FastCrud.Query.Gridify\FastCrud.Query.Gridify.csproj" />
     <ProjectReference Include="..\..\src\FastCrud.Validation.FluentValidation\FastCrud.Validation.FluentValidation.csproj" />
     <ProjectReference Include="..\..\src\FastCrud.Web.MinimalApi\FastCrud.Web.MinimalApi.csproj" />
   </ItemGroup>
 
-  <!-- Package references for EF Core InMemory and Swagger (OpenAPI) support.
-       Versions are defined centrally in Directory.Packages.props. -->
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
     <PackageReference Include="Swashbuckle.AspNetCore" />
-    <!-- Direct reference to FluentValidation for defining validators in the sample -->
     <PackageReference Include="FluentValidation" />
   </ItemGroup>
 
-  <!-- Use the Razor SDK implicitly for minimal APIs (e.g., IResult). -->
 </Project>

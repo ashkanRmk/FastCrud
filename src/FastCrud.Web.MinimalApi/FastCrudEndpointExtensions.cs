@@ -2,8 +2,7 @@ using FastCrud.Abstractions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Routing;
 
 namespace FastCrud.Web.MinimalApi
 {

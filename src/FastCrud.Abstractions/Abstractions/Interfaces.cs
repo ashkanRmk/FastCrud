@@ -1,3 +1,5 @@
+using FastCrud.Abstractions.Primitives;
+
 namespace FastCrud.Abstractions;
 
 using System;

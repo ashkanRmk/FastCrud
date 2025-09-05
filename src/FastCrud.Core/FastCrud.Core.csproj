@@ -19,4 +19,8 @@
     <PackageReference Include="Microsoft.Extensions.Options" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\FastCrud.Abstractions\FastCrud.Abstractions.csproj" />
+  </ItemGroup>
+  
 </Project>

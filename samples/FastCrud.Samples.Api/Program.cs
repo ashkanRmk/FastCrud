@@ -7,6 +7,7 @@ using FastCrud.Samples.Api.Data;
 using FastCrud.Samples.Api.Dtos;
 using FastCrud.Samples.Api.Models;
 using FastCrud.Validation.FluentValidation;
+using FastCrud.Web.MinimalApi;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 

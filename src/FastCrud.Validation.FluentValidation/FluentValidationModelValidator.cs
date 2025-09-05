@@ -1,6 +1,5 @@
 using FastCrud.Abstractions;
 using FluentValidation;
-using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using System.Threading;
