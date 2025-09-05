@@ -1,4 +1,5 @@
 using FastCrud.Query.Gridify;
+using FastCrud.Query.Gridify.Abstractions;
 using FastCrud.Samples.Api.Models;
 using Gridify;
 

@@ -1,6 +1,6 @@
 using Gridify;
 
-namespace FastCrud.Query.Gridify;
+namespace FastCrud.Query.Gridify.Abstractions;
 
 public interface IGridifyMapperProvider
 {

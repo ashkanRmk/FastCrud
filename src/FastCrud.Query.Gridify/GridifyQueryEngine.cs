@@ -1,6 +1,7 @@
 using Gridify;
 using FastCrud.Abstractions.Primitives;
 using FastCrud.Abstractions.Query;
+using FastCrud.Query.Gridify.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
 namespace FastCrud.Query.Gridify;

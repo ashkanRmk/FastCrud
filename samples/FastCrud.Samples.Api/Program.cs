@@ -7,33 +7,19 @@ using FastCrud.Samples.Api.Dtos;
 using FastCrud.Samples.Api.Models;
 using FastCrud.Validation.FluentValidation.DI;
 using FastCrud.Web.MinimalApi;
-using Gridify;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// In-memory database; replace with SQL Server or other provider in real apps.
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseInMemoryDatabase("fastcrud-demo"));
 
 // FastCrud core services
 builder.Services.AddFastCrudCore();
-
-// Mapster configuration: map DTOs onto entities.
-builder.Services.UseMapster(cfg =>
-{
-    cfg.NewConfig<CustomerCreateDto, Customer>();
-    cfg.NewConfig<CustomerUpdateDto, Customer>();
-    cfg.NewConfig<OrderCreateDto, Order>();
-    cfg.NewConfig<OrderUpdateDto, Order>();
-});
-
-// Query engine: register a Gridify-based engine.
-builder.Services.UseGridifyQueryEngine(typeof(Program).Assembly);
-
-// FluentValidation: scan validators in this assembly and bridge to IModelValidator<T>.
-builder.Services.UseFluentValidationAdapter(typeof(Program).Assembly);
+builder.Services.UseMapster();
+builder.Services.UseGridifyQueryEngine();
+builder.Services.UseFluentValidationAdapter();
 
 // Register EF repositories per aggregate. Required for CrudService to resolve IRepository.
 builder.Services.AddEfRepository<Customer, Guid, AppDbContext>();
@@ -75,6 +61,6 @@ app.UseSwaggerUI();
 
 // Map CRUD endpoints for entities using FastCrud.
 app.MapFastCrud<Customer, Guid, CustomerCreateDto, CustomerUpdateDto, CustomerReadDto>("/api/customers");
-app.MapFastCrud<Order, Guid, OrderCreateDto, OrderUpdateDto, OrderReadDto>("/api/orders");
+app.MapFastCrud<Order, Guid, OrderCreateDto, OrderUpdateDto, OrderReadDto>("/api/orders", ~CrudOps.Delete);
 
 app.Run();

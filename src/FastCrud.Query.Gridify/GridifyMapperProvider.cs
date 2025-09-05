@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Reflection;
+using FastCrud.Query.Gridify.Abstractions;
 using Gridify;
 
 namespace FastCrud.Query.Gridify;
@@ -41,10 +42,8 @@ public sealed class GridifyMapperProvider : IGridifyMapperProvider
         {
             var entityType = group.Key;
 
-            // Construct GridifyMapper<TEntity>
             var mapper = CreateMapperFor(entityType);
 
-            // Apply all profiles for that entity
             foreach (var p in group.Select(g => g.ProfileType))
             {
                 var profile = Activator.CreateInstance(p)!;

@@ -4,20 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace FastCrud.Persistence.EFCore.DI;
 
-/// <summary>
-/// Extensions for registering EF repositories with the DI container.
-/// </summary>
 public static class ServiceCollectionExtensions
 {
-    /// <summary>
-    /// Registers an EF repository for the specified aggregate type and database context. When invoked, resolves
-    /// <see cref="IRepository{TAgg, TId}"/> to an <see cref="EfRepository{TAgg, TId, TDbContext}"/>.
-    /// </summary>
-    /// <typeparam name="TAgg">Aggregate type.</typeparam>
-    /// <typeparam name="TId">Identifier type.</typeparam>
-    /// <typeparam name="TDbContext">DbContext type.</typeparam>
-    /// <param name="services">The service collection.</param>
-    /// <returns>The service collection for chaining.</returns>
     public static IServiceCollection AddEfRepository<TAgg, TId, TDbContext>(this IServiceCollection services)
         where TAgg : class 
         where TDbContext : DbContext
