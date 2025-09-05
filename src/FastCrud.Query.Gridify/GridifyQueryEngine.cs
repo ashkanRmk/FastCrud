@@ -6,17 +6,21 @@ namespace FastCrud.Query.Gridify;
 
 public sealed class GridifyQueryEngine(IGridifyMapperProvider mappers) : IQueryEngine
 {
-    public Task<PagedResult<T>> ApplyQueryAsync<T>(IQueryable<T> source, IQuerySpec spec, CancellationToken ct = default)
+    public Task<PagedResult<TOut>> ApplyQueryAsync<TIn, TOut>(
+        IQueryable<TIn> source, 
+        IQuerySpec spec, 
+        Func<IQueryable<TIn>, IQueryable<TOut>> projector, 
+        CancellationToken ct = default)
     {
         var gq = new GridifyQuery
         {
-            Filter = spec.Filter,
-            OrderBy = spec.OrderBy,
-            Page = spec.Page > 0 ? spec.Page : 1,
+            Filter   = spec.Filter,
+            OrderBy  = spec.OrderBy,
+            Page     = spec.Page  > 0 ? spec.Page  : 1,
             PageSize = spec.PageSize > 0 ? spec.PageSize : 50
         };
-        
-        var mapper = mappers.GetMapper<T>();
+
+        var mapper = mappers.GetMapper<TIn>();
 
         if (!string.IsNullOrWhiteSpace(gq.Filter))
             source = mapper is null ? source.ApplyFiltering(gq) : source.ApplyFiltering(gq, mapper);
@@ -29,11 +33,10 @@ public sealed class GridifyQueryEngine(IGridifyMapperProvider mappers) : IQueryE
         if (spec.PageSize > 0)
             source = source.ApplyPaging(gq);
 
-        var items = source.ToList();
+        var projected = projector(source);
+        var items = projected.ToList();
 
-        var result = new PagedResult<T>(items, total, gq.Page, gq.PageSize);
+        var result = new PagedResult<TOut>(items, total, gq.Page, gq.PageSize);
         return Task.FromResult(result);
     }
-
-
 }

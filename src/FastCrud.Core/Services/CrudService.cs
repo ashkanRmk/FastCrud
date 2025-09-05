@@ -73,12 +73,15 @@ namespace FastCrud.Core.Services
         }
 
         /// <inheritdoc />
-        public async Task<PagedResult<TAgg>> QueryAsync(IQuerySpec spec, CancellationToken cancellationToken)
+        public async Task<PagedResult<TOut>> QueryAsync<TOut>(
+            IQuerySpec spec,
+            Func<IQueryable<TAgg>, IQueryable<TOut>> projector,
+            CancellationToken ct = default)
         {
-            var query = _repository.Query();
-            return await _queryEngine.ApplyQueryAsync(query, spec, cancellationToken);
+            var q = _repository.Query();
+            return await _queryEngine.ApplyQueryAsync(q, spec, projector, ct);
         }
-
+        
         /// <inheritdoc />
         public async Task<TAgg> UpdateAsync(TId id, object input, CancellationToken cancellationToken)
         {

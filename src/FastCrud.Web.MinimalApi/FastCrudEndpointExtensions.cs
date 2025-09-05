@@ -1,10 +1,10 @@
-using FastCrud.Abstractions;
 using FastCrud.Abstractions.Abstractions;
 using FastCrud.Abstractions.Query;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Mapster;
 
 namespace FastCrud.Web.MinimalApi
 {
@@ -18,17 +18,25 @@ namespace FastCrud.Web.MinimalApi
         /// </summary>
         /// <typeparam name="TAgg">Aggregate type.</typeparam>
         /// <typeparam name="TId">Identifier type.</typeparam>
+        /// <typeparam name="TReadDto">Dto for querying data</typeparam>
+        /// <typeparam name="TUpdateDto">DTO for update an aggregate</typeparam>
+        /// <typeparam name="TCreateDto">DTO for creating new aggregate</typeparam>
         /// <param name="builder">Endpoint route builder.</param>
         /// <param name="routePrefix">Route prefix (e.g., "/api/orders").</param>
         /// <returns>The route builder for chaining.</returns>
-        public static IEndpointRouteBuilder MapFastCrud<TAgg, TId>(this IEndpointRouteBuilder builder, string routePrefix)
+        public static IEndpointRouteBuilder MapFastCrud<TAgg, TId, TCreateDto, TUpdateDto, TReadDto>(
+            this IEndpointRouteBuilder builder, string routePrefix)
         {
-            var group = builder.MapGroup(routePrefix).WithTags($"{typeof(TAgg).Name}s");
+            var prefix = routePrefix.StartsWith('/') ?  routePrefix : $"/{routePrefix}";
+            var group = builder.MapGroup(prefix).WithTags($"{typeof(TAgg).Name}s");
             // list/query
-            group.MapGet("/", async ([AsParameters] QuerySpec spec, ICrudService<TAgg, TId> svc, CancellationToken ct) =>
+            group.MapGet("/", async ([AsParameters] QuerySpec spec, 
+                    ICrudService<TAgg, TId> svc,
+                    CancellationToken ct) =>
             {
-                var result = await svc.QueryAsync(spec, ct);
-                return Results.Ok(result);
+                var page = await svc.QueryAsync<TReadDto>(spec, q => q.ProjectToType<TReadDto>(), ct);
+                // var result = await svc.QueryAsync(spec, ct);
+                return Results.Ok(page);
             })
             .WithName($"List{typeof(TAgg).Name}s");
 

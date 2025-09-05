@@ -74,33 +74,8 @@ using (var scope = app.Services.CreateScope())
 app.UseSwagger();
 app.UseSwaggerUI();
 
-// Map CRUD endpoints for entities using FastCrud. The route prefixes must begin with '/'.
-app.MapFastCrud<Customer, Guid>("/api/customers");
-app.MapFastCrud<Order, Guid>("/api/orders");
-
-// Additional DTO-specific endpoints to demonstrate mapping from DTOs into entities via FastCrud services.
-app.MapPost("/api/customers-dto", async (CustomerCreateDto dto, ICrudService<Customer, Guid> svc, CancellationToken ct) =>
-{
-    var entity = await svc.CreateAsync(dto, ct);
-    return Results.Ok(entity);
-}).WithName("CreateCustomerDto").WithTags("Customers");
-
-app.MapPut("/api/customers-dto/{id:guid}", async (Guid id, CustomerUpdateDto dto, ICrudService<Customer, Guid> svc, CancellationToken ct) =>
-{
-    var entity = await svc.UpdateAsync(id, dto, ct);
-    return Results.Ok(entity);
-}).WithName("UpdateCustomerDto").WithTags("Customers");
-
-app.MapPost("/api/orders-dto", async (OrderCreateDto dto, ICrudService<Order, Guid> svc, CancellationToken ct) =>
-{
-    var entity = await svc.CreateAsync(dto, ct);
-    return Results.Ok(entity);
-}).WithName("CreateOrderDto").WithTags("Orders");
-
-app.MapPut("/api/orders-dto/{id:guid}", async (Guid id, OrderUpdateDto dto, ICrudService<Order, Guid> svc, CancellationToken ct) =>
-{
-    var entity = await svc.UpdateAsync(id, dto, ct);
-    return Results.Ok(entity);
-}).WithName("UpdateOrderDto").WithTags("Orders");
+// Map CRUD endpoints for entities using FastCrud.
+app.MapFastCrud<Customer, Guid, CustomerCreateDto, CustomerUpdateDto, CustomerReadDto>("/api/customers");
+app.MapFastCrud<Order, Guid, OrderCreateDto, OrderUpdateDto, OrderReadDto>("/api/orders");
 
 app.Run();

@@ -30,10 +30,14 @@ public interface ICrudService<TAgg, TId>
     /// Queries aggregates using a generic <see cref="IQuerySpec"/> describing paging, filtering and sorting information.
     /// </summary>
     /// <param name="spec">Query specification.</param>
+    /// <param name="projector"></param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>A paged result of aggregates matching the query.</returns>
-    Task<PagedResult<TAgg>> QueryAsync(IQuerySpec spec, CancellationToken cancellationToken);
-
+    Task<PagedResult<TOut>> QueryAsync<TOut>(
+        IQuerySpec spec,
+        Func<IQueryable<TAgg>, IQueryable<TOut>> projector,
+        CancellationToken cancellationToken = default);
+    
     /// <summary>
     /// Updates an aggregate by its identifier from an arbitrary input object. The input may be a DTO or the entity itself.
     /// Implementations should map and validate as appropriate.

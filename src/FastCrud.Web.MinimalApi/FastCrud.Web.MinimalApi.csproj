@@ -14,6 +14,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Mapster" />
       <FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>
 
