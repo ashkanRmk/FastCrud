@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastCrud.Abstractions", "sr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastCrud.Core", "src\FastCrud.Core\FastCrud.Core.csproj", "{CFB6CCC4-5526-4BA5-B413-90EE7D2E0BD5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastCrud.Persistence.EFCore", "src\FastCrud.Persistence.EFCore\FastCrud.Persistence.EFCore.csproj", "{FC6F0715-9D78-4F25-AE19-CD4E117D54A1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastCrud.PersistenceEfCore", "src\FastCrud.PersistenceEfCore\FastCrud.PersistenceEfCore.csproj", "{FC6F0715-9D78-4F25-AE19-CD4E117D54A1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastCrud.Mapping.Mapster", "src\FastCrud.Mapping.Mapster\FastCrud.Mapping.Mapster.csproj", "{F4BDE4E4-4163-4404-ABB6-FC837FBEDF23}"
 EndProject
