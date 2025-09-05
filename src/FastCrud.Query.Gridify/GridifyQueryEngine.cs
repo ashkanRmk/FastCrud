@@ -15,9 +15,7 @@ public sealed class GridifyQueryEngine(IGridifyMapperProvider mappers) : IQueryE
             Page = spec.Page > 0 ? spec.Page : 1,
             PageSize = spec.PageSize > 0 ? spec.PageSize : 50
         };
-
-        // var mapper = mappers.GetMapper<TAgg>();
-
+        
         var mapper = mappers.GetMapper<T>();
 
         if (!string.IsNullOrWhiteSpace(gq.Filter))

@@ -31,12 +31,7 @@ builder.Services.UseMapster(cfg =>
 });
 
 // Query engine: register a Gridify-based engine.
-builder.Services.UseGridifyQueryEngine();
-
-var customerMapper = new GridifyMapper<Customer>()
-    .GenerateMappings()
-    .AddMap("name", x => x.FirstName + " " + x.LastName);
-builder.Services.AddGridifyMapperFor(customerMapper);
+builder.Services.UseGridifyQueryEngine(typeof(Program).Assembly);
 
 // FluentValidation: scan validators in this assembly and bridge to IModelValidator<T>.
 builder.Services.UseFluentValidationAdapter(typeof(Program).Assembly);
