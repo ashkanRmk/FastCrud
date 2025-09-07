@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <ItemGroup>
+      <PackageReference Include="Mapster" />
+      <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <ProjectReference Include="..\FastCrud.Abstractions\FastCrud.Abstractions.csproj" />
+    </ItemGroup>
+
+</Project>

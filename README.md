@@ -1,133 +1,108 @@
-# 📁 FastCrud: Minimal API Generator
+# 🚀 FastCrud — Minimal API CRUD Generator for .NET 9
 
-Minimal-API template in .NET 9 for auto-generating CRUD endpoints with DTOs, validation, pagination, filtering, and sorting—powered by **Gridify**, **FluentValidation**, and **Mapster**.
-
-## Features
-
-- **Auto-registered** CRUD with **Minimal API** and **DTOs**
-- **Validation** via FluentValidation
-- **Paging**, **filtering**, **sorting** using Gridify
-- **Field allow-lists** via mappers to control exposed columns
-- **Modular endpoints** per entity
-- **Swagger/OpenAPI** documentation built-in
+**FastCrud** is a lightweight, flexible **CRUD API generator** for **.NET 9**.  
+It combines **Minimal APIs + EF Core + DTOs + FluentValidation + Gridify + Auto-Swagger** to let you bootstrap production-ready endpoints with minimal effort.
 
 ---
 
-## 🧱 How to add a new entity with CRUD
+## 📦 Install NuGet packages
 
-Let’s add an example entity: `Order`
+Add the required FastCrud packages (version `0.2.1`):
 
-### 1. Define your Entity & DTOs
+```bash
+dotnet add package FastCrud.Abstractions -v 0.2.1
+dotnet add package FastCrud.Core -v 0.2.1
+dotnet add package FastCrud.Mapping.Mapster -v 0.2.1
+dotnet add package FastCrud.PersistenceEfCore -v 0.2.1
+dotnet add package FastCrud.Query.Gridify -v 0.2.1
+dotnet add package FastCrud.Validation.FluentValidation -v 0.2.1
+dotnet add package FastCrud.Web.MinimalApi -v 0.2.1
+```
+---
 
-**`Entities/Order.cs`**
+## ⚙️ Configure Program.cs
+
+Register FastCrud services:
+```csharp
+builder.Services.AddFastCrudCore();
+builder.Services.UseMapster();
+builder.Services.UseGridifyQueryEngine();
+builder.Services.UseFluentValidationAdapter();
+```
+Register EF repositories per entity:
+```csharp
+builder.Services.AddEfRepository<Customer, Guid, AppDbContext>();
+builder.Services.AddEfRepository<Order, Guid, AppDbContext>();
+```
+---
+
+## 🌐 Map CRUD Endpoints
+Define CRUD endpoints for each entity + DTO set:
 
 ```csharp
-public class Order : IEntity<int>
-{
-    public int Id { get; set; }
-    public string CustomerName { get; set; } = default!;
-    public decimal TotalAmount { get; set; }
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-}
+app.MapFastCrud<Customer, Guid, CustomerCreateDto, CustomerUpdateDto, CustomerReadDto>(
+    "/api/customers",
+    nameof(Customer),
+    "v1"
+);
+
+app.MapFastCrud<Order, Guid, OrderCreateDto, OrderUpdateDto, OrderReadDto>(
+    "/api/orders",
+    nameof(Order),
+    "v1",
+    ~CrudOps.Delete // disable Delete
+);
 ```
 
-**`Dtos/OrderDtos.cs`**
-
-```csharp
-public record OrderReadDto(int Id, string CustomerName, decimal TotalAmount, DateTime CreatedAt);
-public record OrderCreateDto(string CustomerName, decimal TotalAmount);
-public record OrderUpdateDto(string CustomerName, decimal TotalAmount);
-```
+- Each entity requires 3 DTOs: CreateDto, UpdateDto, and ReadDto.
+- By default, all CRUD operations are generated.
+- To restrict operations, use the CrudOps flag with bitwise operators.
 
 ---
 
-### 2. Add Validators
+## ✅ Validation
 
-**`PaginationMappers/OrderMapper.cs`**
-
+Add FluentValidation validators for your DTOs or entities:
 ```csharp
-public class OrderCreateValidator : AbstractValidator<OrderCreateDto>
+public class CustomerValidator : AbstractValidator<Customer>
 {
-    public OrderCreateValidator()
+    public CustomerValidator()
     {
-        RuleFor(x => x.CustomerName).NotEmpty();
-        RuleFor(x => x.TotalAmount).GreaterThanOrEqualTo(0);
-    }
-}
-
-public class OrderUpdateValidator : AbstractValidator<OrderUpdateDto>
-{
-    public OrderUpdateValidator()
-    {
-        RuleFor(x => x.CustomerName).NotEmpty();
-        RuleFor(x => x.TotalAmount).GreaterThanOrEqualTo(0);
-    }
-}
-```
-
----
-
-### 3. Add a Gridify mapper (explicit allow-list)
-
-**`PaginationMappers/OrderMapper.cs`**
-
-```csharp
-public sealed class OrderMapper : GridifyMapper<Order>
-{
-    public OrderMapper()
-        : base(new GridifyMapperConfiguration
-        {
-            CaseInsensitiveFiltering = true
-        })
-    {
-        AddMap(nameof(Order.Id),        o => o.Id);
-        AddMap(nameof(Order.CustomerName), o => o.CustomerName);
-        AddMap(nameof(Order.TotalAmount), o => o.TotalAmount);
-        AddMap(nameof(Order.CreatedAt), o => o.CreatedAt);
+        RuleFor(x => x.FirstName).NotEmpty().WithMessage("First name is required.");
+        RuleFor(x => x.LastName).NotEmpty();
+        RuleFor(x => x.Email).NotEmpty().EmailAddress();
     }
 }
 ```
+Validation is applied automatically to requests.
 
----
+----
+## 🔍 Filtering & Sorting with Gridify
 
-### 4. Create Endpoint Module
-
-**`Endpoints/OrderEndpoints.cs`**
-
+Enable advanced query options by writing a `Gridify` profile:
 ```csharp
-public sealed class OrderEndpoints : CrudEndpointModule<Order, int, OrderReadDto, OrderCreateDto, OrderUpdateDto>
+public sealed class CustomerGridifyProfile : IGridifyMapperProfile<Customer>
 {
-    public override string RoutePrefix => "/orders";
-    public override CrudOps Ops => CrudOps.AllOps;
-
-    protected override void MapCustomEndpoints(RouteGroupBuilder group)
+    public void Configure(GridifyMapper<Customer> m)
     {
-        // Optional: additional endpoint
-        group.MapGet("/top/{count:int}", async (AppDbContext db, int count, CancellationToken ct) =>
-        {
-            var list = await db.Set<Order>()
-                .OrderByDescending(o => o.TotalAmount)
-                .Take(count)
-                .Select(o => new OrderReadDto(o.Id, o.CustomerName, o.TotalAmount, o.CreatedAt))
-                .ToListAsync(ct);
-            return Results.Ok(list);
-        });
+        m.Configuration.CaseInsensitiveFiltering = true;
+
+        m.GenerateMappings()
+         .AddMap("name", c => c.FirstName + " " + c.LastName)
+         .RemoveMap(nameof(Customer.CreatedUtc));
     }
 }
 ```
+This enables expressive queries like:
+- `GET /api/customers?filter=name~"john"&sort=-CreatedUtc&page=1&pageSize=20`
 
 ---
+## 🎉 Done!
 
-### 5. Run and Test
+With just a few lines, you get:
 
-CRUD appears under `/v1/orders` in Swagger. It supports:
-
-Paging (`?page=1&pageSize=10`)
-
-Filtering (`?filter=CustomerName=*smith`)
-
-Sorting (`?orderBy=TotalAmount desc`)
-
----
-
-Visit/swagger UI at `https://localhost:5001/swagger`
+- Clean Minimal APIs
+- Automatic Swagger docs
+- DTO mapping (Mapster)
+- Validation (FluentValidation)
+- Filtering, sorting & paging (Gridify)
