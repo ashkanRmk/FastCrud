@@ -13,10 +13,12 @@ namespace FastCrud.Web.MinimalApi
         public static IEndpointRouteBuilder MapFastCrud<TAgg, TId, TCreateDto, TUpdateDto, TReadDto>(
             this IEndpointRouteBuilder builder, 
             string routePrefix,
+            string tagName,
+            string groupName,
             CrudOps ops = CrudOps.AllOps)
         {
             var prefix = routePrefix.StartsWith('/') ?  routePrefix : $"/{routePrefix}";
-            var group = builder.MapGroup(prefix).WithTags($"{typeof(TAgg).Name}s");
+            var group = builder.MapGroup(prefix).WithTags(tagName).WithGroupName(groupName);
             
             if (ops.HasFlag(CrudOps.GetList))
             {
