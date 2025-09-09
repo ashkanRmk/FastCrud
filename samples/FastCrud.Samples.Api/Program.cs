@@ -44,15 +44,15 @@ using (var scope = app.Services.CreateScope())
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     if (!db.Customers.Any())
     {
-        var c1 = new Customer { FirstName = "Samane", LastName = "Yaghoubi", Email = "samane@example.com" };
-        var c2 = new Customer { FirstName = "Ashkan", LastName = "Rahmani", Email = "ashkan@example.com" };
-        db.Customers.AddRange(c1, c2);
+        // var c1 = new Customer { FirstName = "Samane", LastName = "Yaghoubi", Email = "samane@example.com" };
+        // var c2 = new Customer { FirstName = "Ashkan", LastName = "Rahmani", Email = "ashkan@example.com" };
+        // db.Customers.AddRange(c1, c2);
 
-        db.Orders.AddRange(
-            new Order { CustomerId = c1.Id, Number = "ORD-2025-0001", Amount = 120.50m },
-            new Order { CustomerId = c2.Id, Number = "ORD-2025-0002", Amount = 260.00m }
-        );
-        db.SaveChanges();
+        // db.Orders.AddRange(
+            // new Order { CustomerId = c1.Id, Number = "ORD-2025-0001", Amount = 120.50m },
+            // new Order { CustomerId = c2.Id, Number = "ORD-2025-0002", Amount = 260.00m }
+        // );
+        // db.SaveChanges();
     }
 }
 

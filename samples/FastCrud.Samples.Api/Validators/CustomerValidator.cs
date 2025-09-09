@@ -1,5 +1,4 @@
 using FastCrud.Samples.Api.Dtos;
-using FastCrud.Samples.Api.Models;
 using FluentValidation;
 
 namespace FastCrud.Samples.Api.Validators

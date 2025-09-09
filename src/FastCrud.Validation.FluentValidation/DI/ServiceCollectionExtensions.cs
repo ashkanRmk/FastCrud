@@ -16,18 +16,11 @@ public static class ServiceCollectionExtensions
         }
         else
         {
-            var entry  = Assembly.GetEntryAssembly();
-            var loaded = AppDomain.CurrentDomain.GetAssemblies()
-                .Where(a => !a.IsDynamic && !string.IsNullOrEmpty(a.Location));
-
-            services.AddValidatorsFromAssemblies(
-                new[] { entry! }.Concat(loaded).Distinct(),
-                includeInternalTypes: true
-            );
+            var callingAssembly = Assembly.GetExecutingAssembly();
+            services.AddValidatorsFromAssembly(callingAssembly);
         }
 
         services.AddScoped(typeof(IModelValidator<>), typeof(FluentValidationModelValidator<>));
-        // services.TryAddScoped(typeof(IModelValidator<>), typeof(FluentValidationDtoValidator<>)); 
         return services;
     }
 }

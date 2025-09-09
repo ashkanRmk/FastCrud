@@ -5,11 +5,17 @@ ARTIFACTS_DIR="./artifacts"
 NUGET_API_KEY=""
 NUGET_SOURCE="https://api.nuget.org/v3/index.json"
 
+
+
 echo "📦 Cleaning old packages..."
 rm -rf "$ARTIFACTS_DIR"
 mkdir -p "$ARTIFACTS_DIR"
 
-echo "⚙️ Building & packing project..."
+echo "📦 Building new Release..."
+dotnet build -c Release
+
+
+echo "⚙️ Packing project..."
 dotnet pack -c Release -o "$ARTIFACTS_DIR"
 
 echo "🚀 Pushing NuGet packages..."
