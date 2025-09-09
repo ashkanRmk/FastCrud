@@ -14,7 +14,7 @@ public sealed class GridifyMapperProvider : IGridifyMapperProvider
     {
         _assemblies = (assemblies is { Length: > 0 })
             ? assemblies
-            : [Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly()];
+            : [Assembly.GetExecutingAssembly()];
 
         BuildCache();
     }

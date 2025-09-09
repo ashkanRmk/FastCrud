@@ -1,3 +1,4 @@
+using System.Collections;
 using FastCrud.Abstractions.Abstractions;
 using FastCrud.Abstractions.Primitives;
 using FastCrud.Abstractions.Query;
@@ -8,18 +9,19 @@ namespace FastCrud.Core.Services
         IRepository<TAgg, TId> repository,
         IObjectMapper mapper,
         IEnumerable<IModelValidator<TAgg>> validators,
+        IServiceProvider serviceProvider,
         IQueryEngine queryEngine)
         : ICrudService<TAgg, TId>
     {
         public async Task<TAgg> CreateAsync(object input, CancellationToken cancellationToken)
         {
             ArgumentNullException.ThrowIfNull(input);
+
+            await ValidateDtoAsync(input, serviceProvider, cancellationToken);
+
             var entity = input is TAgg agg ? agg : mapper.Map<TAgg>(input);
             
-            foreach (var validator in validators)
-            {
-                await validator.ValidateAsync(entity, cancellationToken);
-            }
+            await ValidateModelAsync(entity, cancellationToken);
             
             await repository.AddAsync(entity, cancellationToken);
             await repository.SaveChangesAsync(cancellationToken);
@@ -68,13 +70,43 @@ namespace FastCrud.Core.Services
                 mapper.Map(input, entity);
             }
             
-            foreach (var validator in validators)
-            {
-                await validator.ValidateAsync(entity, cancellationToken);
-            }
+            await ValidateModelAsync(entity, cancellationToken);
             
             await repository.SaveChangesAsync(cancellationToken);
             return entity;
         }
+        
+        private async Task ValidateModelAsync(
+            TAgg entity, 
+            CancellationToken cancellationToken)
+        {
+            foreach (var validator in validators)
+            {
+                await validator.ValidateAsync(entity, cancellationToken);
+            }
+        }
+        
+        private static async Task ValidateDtoAsync(
+            object dto,
+            IServiceProvider serviceProvider, 
+            CancellationToken cancellationToken)
+        {
+            var dtoType = dto.GetType();
+            var validatorInterface = typeof(IModelValidator<>).MakeGenericType(dtoType);
+            var enumerableType     = typeof(IEnumerable<>).MakeGenericType(validatorInterface);
+
+            if (serviceProvider.GetService(enumerableType) is not IEnumerable validators)
+                return;
+
+            foreach (var v in validators)
+            {
+                var method = v.GetType().GetMethod("ValidateAsync", [dtoType, typeof(CancellationToken)])!;
+                var task   = (Task)method.Invoke(v, [dto, cancellationToken])!;
+                await task.ConfigureAwait(false);
+            }
+        }
     }
+    
+    
+    
 }
