@@ -2,6 +2,7 @@ using System.Reflection;
 using FastCrud.Abstractions.Abstractions;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace FastCrud.Validation.FluentValidation.DI;
 
@@ -11,18 +12,22 @@ public static class ServiceCollectionExtensions
     {
         if (assemblies is { Length: > 0 })
         {
-            foreach (var assembly in assemblies)
-            {
-                services.AddValidatorsFromAssembly(assembly);
-            }
+            services.AddValidatorsFromAssemblies(assemblies, includeInternalTypes: true);
         }
         else
         {
-            var callingAssembly = Assembly.GetCallingAssembly();
-            services.AddValidatorsFromAssembly(callingAssembly);
+            var entry  = Assembly.GetEntryAssembly();
+            var loaded = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(a => !a.IsDynamic && !string.IsNullOrEmpty(a.Location));
+
+            services.AddValidatorsFromAssemblies(
+                new[] { entry! }.Concat(loaded).Distinct(),
+                includeInternalTypes: true
+            );
         }
 
-        services.AddTransient(typeof(IModelValidator<>), typeof(FluentValidationModelValidator<>));
+        services.AddScoped(typeof(IModelValidator<>), typeof(FluentValidationModelValidator<>));
+        // services.TryAddScoped(typeof(IModelValidator<>), typeof(FluentValidationDtoValidator<>)); 
         return services;
     }
 }
