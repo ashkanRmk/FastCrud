@@ -36,7 +36,7 @@ public static class AuditServiceCollectionExtensions
     {
         if (!typeof(IAuditEntry).IsAssignableFrom(auditEntryType))
         {
-            throw new ArgumentException($"Type: {auditEntryType.Name} ans IAuditEntry", nameof(auditEntryType));
+            throw new ArgumentException($"Type: {auditEntryType.Name} and IAuditEntry", nameof(auditEntryType));
         }
 
         services.AddScoped<IAuditUserProvider, DefaultAuditUserProvider>();
