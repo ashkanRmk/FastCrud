@@ -27,11 +27,6 @@ namespace FastCrud.Core.Services
             await repository.AddAsync(entity, cancellationToken);
             await repository.SaveChangesAsync(cancellationToken);
 
-            if (auditService != null)
-            {
-                await auditService.LogAsync(entity, AuditAction.Create, newValues: entity, cancellationToken: cancellationToken);
-            }
-
             return entity;
         }
 
@@ -40,11 +35,6 @@ namespace FastCrud.Core.Services
             var entity = await repository.FindAsync(id, cancellationToken);
             if (entity != null)
             {
-                if (auditService != null)
-                {
-                    await auditService.LogAsync(entity, AuditAction.Delete, oldValues: entity, cancellationToken: cancellationToken);
-                }
-
                 await repository.DeleteAsync(entity, cancellationToken);
                 await repository.SaveChangesAsync(cancellationToken);
             }
@@ -87,11 +77,6 @@ namespace FastCrud.Core.Services
             await ValidateModelAsync(entity, cancellationToken);
 
             await repository.SaveChangesAsync(cancellationToken);
-
-            if (auditService != null && oldValues != null)
-            {
-                await auditService.LogAsync(entity, AuditAction.Update, oldValues: oldValues, newValues: entity, cancellationToken: cancellationToken);
-            }
 
             return entity;
         }
