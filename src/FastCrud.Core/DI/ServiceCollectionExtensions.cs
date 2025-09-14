@@ -9,7 +9,7 @@ namespace FastCrud.Core.DI
         public static IServiceCollection AddFastCrudCore(
             this IServiceCollection services)
         {
-            services.AddScoped(typeof(ICrudService<,>), typeof(CrudService<,>));
+            services.AddScoped(typeof(ICrudService<,,,>), typeof(CrudService<,,,>));
             return services;
         }
     }
