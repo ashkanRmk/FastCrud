@@ -16,8 +16,14 @@ public static class ServiceCollectionExtensions
         }
         else
         {
-            var callingAssembly = Assembly.GetExecutingAssembly();
-            services.AddValidatorsFromAssembly(callingAssembly);
+            var entry = Assembly.GetEntryAssembly();
+            var calling = Assembly.GetCallingAssembly();
+            var executing = Assembly.GetExecutingAssembly();
+            var uniq = new[] { entry, calling, executing }
+                .Where(a => a != null)
+                .Distinct()
+                .ToArray()!;
+            services.AddValidatorsFromAssemblies(uniq, includeInternalTypes: true);
         }
 
         services.AddScoped(typeof(IModelValidator<>), typeof(FluentValidationModelValidator<>));

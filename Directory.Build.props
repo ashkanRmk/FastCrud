@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <Version>0.2.5</Version>
+    <Version>0.2.6</Version>
 
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
