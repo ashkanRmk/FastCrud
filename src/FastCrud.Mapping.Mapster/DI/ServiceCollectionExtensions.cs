@@ -12,9 +12,10 @@ public static class ServiceCollectionExtensions
         var cfg = TypeAdapterConfig.GlobalSettings;
         cfg.Default.EnableNonPublicMembers(true);
         configure?.Invoke(cfg);
-
+        
         services.TryAddSingleton(cfg);
         services.TryAddSingleton<IObjectMapper, MapsterObjectMapper>();
+
         return services;
     }
 }

@@ -59,7 +59,7 @@ public static class FastCrudEndpointExtensions
                 CancellationToken cancellationToken) =>
             {
                 var created = await svc.CreateAsync(dto, cancellationToken);
-                return Results.Ok(created);
+                return Results.Ok();
             })
             .WithName($"Create{typeof(TAgg).Name}");
         }
@@ -73,7 +73,7 @@ public static class FastCrudEndpointExtensions
                 CancellationToken cancellationToken) =>
             {
                 var updated = await svc.UpdateAsync(id, dto, cancellationToken);
-                return Results.Ok(updated);
+                return Results.Ok();
             })
             .WithName($"Update{typeof(TAgg).Name}");
         }

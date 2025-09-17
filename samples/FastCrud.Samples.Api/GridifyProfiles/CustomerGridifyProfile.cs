@@ -1,4 +1,3 @@
-using FastCrud.Query.Gridify;
 using FastCrud.Query.Gridify.Abstractions;
 using FastCrud.Samples.Api.Models;
 using Gridify;
@@ -12,6 +11,7 @@ public sealed class CustomerGridifyProfile : IGridifyMapperProfile<Customer>
         m.Configuration.CaseInsensitiveFiltering = true;
         m.GenerateMappings()
             .AddMap("name", c => c.FirstName + " " + c.LastName)
+            .AddMap("tags.name", customer => customer.Tags.Select(t => t.Name))
             .RemoveMap(nameof(Customer.CreatedUtc));
     }
 }
