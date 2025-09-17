@@ -18,12 +18,8 @@ public class CrudService<TAgg, TId, TCreateDto, TUpdateDto>(
         ArgumentNullException.ThrowIfNull(input);
 
         await ValidateDtoAsync(input!, serviceProvider, cancellationToken);
-
-        var entity = (TAgg)Activator.CreateInstance(typeof(TAgg), nonPublic: true)!
-                    ?? throw new InvalidOperationException(
-                        $"{typeof(TAgg).Name} must have a parameterless constructor (can be private).");
-
-        mapper.Map(input, entity);
+        
+        var entity = mapper.Map<TAgg>(input);
 
         await ValidateModelAsync(entity, cancellationToken);
         await repository.AddAsync(entity, cancellationToken);
