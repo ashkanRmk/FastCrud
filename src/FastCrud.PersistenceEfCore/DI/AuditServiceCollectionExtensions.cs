@@ -17,6 +17,9 @@ public static class AuditServiceCollectionExtensions
                 sp.GetRequiredService<TDbContext>(),
                 sp.GetRequiredService<IAuditUserProvider>()));
 
+        services.AddScoped<IAuditQueryService<TAuditEntry>>(sp =>
+            new EfAuditQueryService<TAuditEntry>(sp.GetRequiredService<TDbContext>()));
+
         return services;
     }
 

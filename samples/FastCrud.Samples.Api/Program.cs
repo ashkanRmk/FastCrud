@@ -34,6 +34,7 @@ builder.Services.UseFluentValidationAdapter();
 builder.Services.AddEfRepository<Customer, Guid, AppDbContext>();
 builder.Services.AddEfRepository<Order, Guid, AppDbContext>();
 
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -66,6 +67,12 @@ using (var scope = app.Services.CreateScope())
 
 app.UseSwagger();
 app.UseSwaggerUI();
+
+app.MapAuditLogs<AuditEntry>(
+    "/api/audit-logs",
+    tagName: nameof(AuditEntry),
+    groupName: "v1"
+);
 
 // Map CRUD endpoints for entities using FastCrud.
 app.MapFastCrud<Customer, Guid, CustomerCreateDto, CustomerUpdateDto, CustomerReadDto>(
