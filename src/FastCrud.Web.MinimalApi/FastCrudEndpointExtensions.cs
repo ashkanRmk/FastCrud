@@ -58,8 +58,10 @@ public static class FastCrudEndpointExtensions
                 ICrudService<TAgg, TId, TCreateDto, TUpdateDto> svc,
                 CancellationToken cancellationToken) =>
             {
-                var created = await svc.CreateAsync(dto, cancellationToken);
-                return Results.Ok();
+                var opResult = await svc.CreateAsync(dto, cancellationToken);
+                return !opResult.Succeeded 
+                    ? Results.BadRequest(opResult.Message) 
+                    : Results.Created();
             })
             .WithName($"Create{typeof(TAgg).Name}");
         }
@@ -72,8 +74,10 @@ public static class FastCrudEndpointExtensions
                 ICrudService<TAgg, TId, TCreateDto, TUpdateDto> svc,
                 CancellationToken cancellationToken) =>
             {
-                var updated = await svc.UpdateAsync(id, dto, cancellationToken);
-                return Results.Ok();
+                var opResult = await svc.UpdateAsync(id, dto, cancellationToken);
+                return !opResult.Succeeded 
+                    ? Results.BadRequest(opResult.Message) 
+                    : Results.Ok();
             })
             .WithName($"Update{typeof(TAgg).Name}");
         }

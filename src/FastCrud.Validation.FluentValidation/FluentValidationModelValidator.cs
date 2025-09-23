@@ -7,13 +7,15 @@ public sealed class FluentValidationModelValidator<T>(
     IEnumerable<IValidator<T>> validators
 ) : IModelValidator<T>
 {
-    public async Task ValidateAsync(T model, CancellationToken cancellationToken)
+    public async Task<(bool ok, string message)> ValidateAsync(T model, CancellationToken cancellationToken)
     {
         foreach (var validator in validators)
         {
             var result = await validator.ValidateAsync(model, cancellationToken);
             if (!result.IsValid)
-                throw new ValidationException(result.Errors);
+                return (false, result.ToString());
+
         }
+        return (true, string.Empty);
     }
 }
