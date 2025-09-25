@@ -10,21 +10,21 @@ public class CrudService<TAgg, TId, TCreateDto, TUpdateDto>(
         IObjectMapper mapper,
         IEnumerable<IModelValidator<TAgg>> validators,
         IServiceProvider serviceProvider,
-        IQueryEngine queryEngine)
-        : ICrudService<TAgg, TId, TCreateDto, TUpdateDto>
+        IQueryEngine queryEngine) 
+        : ICrudService<TAgg, TId, TCreateDto, TUpdateDto> 
 {
-    public async Task<TAgg> CreateAsync(TCreateDto input, CancellationToken cancellationToken)
+    public async Task<OpResult<TAgg>> CreateAsync(TCreateDto input, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(input);
 
-        await ValidateDtoAsync(input!, serviceProvider, cancellationToken);
-        
+        var (ok, message) = await ValidateDtoAsync(input!, serviceProvider, cancellationToken);
+        if(!ok) return new OpResult<TAgg>(false, message);
         var entity = mapper.Map<TAgg>(input);
 
         await ValidateModelAsync(entity, cancellationToken);
         await repository.AddAsync(entity, cancellationToken);
         await repository.SaveChangesAsync(cancellationToken);
-        return entity;
+        return new OpResult<TAgg>(true, string.Empty, entity);
     }
 
     public async Task DeleteAsync(TId id, CancellationToken cancellationToken)
@@ -44,7 +44,7 @@ public class CrudService<TAgg, TId, TCreateDto, TUpdateDto>(
         CancellationToken ct = default)
             => await queryEngine.ApplyQueryAsync(repository.Query(), spec, projector, ct);
 
-    public async Task<TAgg> UpdateAsync(TId id, TUpdateDto input, CancellationToken ct)
+    public async Task<OpResult<TAgg>> UpdateAsync(TId id, TUpdateDto input, CancellationToken ct)
     {
         ArgumentNullException.ThrowIfNull(input);
         var entity = await repository.FindAsync(id, ct)
@@ -52,23 +52,27 @@ public class CrudService<TAgg, TId, TCreateDto, TUpdateDto>(
 
         mapper.Map(input, entity);
 
-        await ValidateModelAsync(entity, ct);
+        var (ok, message) = await ValidateModelAsync(entity, ct);
+        if(!ok) return new OpResult<TAgg>(false, message);
         await repository.SaveChangesAsync(ct);
-        return entity;
+        return new OpResult<TAgg>(true, string.Empty, entity);
     }
 
 
-    private async Task ValidateModelAsync(
+    private async Task<(bool ok, string message)> ValidateModelAsync(
         TAgg entity,
         CancellationToken cancellationToken)
     {
         foreach (var validator in validators)
         {
-            await validator.ValidateAsync(entity, cancellationToken);
+            var (ok, message) = await validator.ValidateAsync(entity, cancellationToken);
+            if (!ok) return (false, message);
         }
+
+        return (true, string.Empty);
     }
 
-    private static async Task ValidateDtoAsync(
+    private static async Task<(bool ok, string message)> ValidateDtoAsync(
         object dto,
         IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
@@ -78,14 +82,16 @@ public class CrudService<TAgg, TId, TCreateDto, TUpdateDto>(
         var enumerableType = typeof(IEnumerable<>).MakeGenericType(validatorInterface);
 
         if (serviceProvider.GetService(enumerableType) is not IEnumerable validators)
-            return;
+            return (true, string.Empty);
 
         foreach (var v in validators)
         {
             var method = v.GetType().GetMethod("ValidateAsync", [dtoType, typeof(CancellationToken)])!;
-            var task = (Task)method.Invoke(v, [dto, cancellationToken])!;
-            await task.ConfigureAwait(false);
+            var task = (Task<(bool ok, string message)>)method.Invoke(v, [dto, cancellationToken])!;
+            var result = await task.ConfigureAwait(false);
+            if(!result.ok) return (false, result.message);
         }
+        return (true, string.Empty);
     }
 }
 

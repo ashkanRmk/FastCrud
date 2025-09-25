@@ -5,8 +5,8 @@ namespace FastCrud.Abstractions.Abstractions;
 
 public interface ICrudService<TAgg, TId, TCreateDto, TUpdateDto>
 {
-    Task<TAgg> CreateAsync(TCreateDto input, CancellationToken ct);
-    Task<TAgg> UpdateAsync(TId id, TUpdateDto input, CancellationToken ct);
+    Task<OpResult<TAgg>> CreateAsync(TCreateDto input, CancellationToken ct);
+    Task<OpResult<TAgg>> UpdateAsync(TId id, TUpdateDto input, CancellationToken ct);
     Task DeleteAsync(TId id, CancellationToken ct);
     Task<TAgg?> GetByIdAsync(TId id, CancellationToken ct);
     Task<PagedResult<TOut>> GetListAsync<TOut>(
@@ -14,3 +14,4 @@ public interface ICrudService<TAgg, TId, TCreateDto, TUpdateDto>
         Func<IQueryable<TAgg>, IQueryable<TOut>> projector,
         CancellationToken cancellationToken = default);
 }
+
