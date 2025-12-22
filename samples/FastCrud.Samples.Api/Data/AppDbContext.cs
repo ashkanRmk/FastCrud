@@ -1,5 +1,6 @@
 using FastCrud.Samples.Api.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FastCrud.Samples.Api.Data;
 

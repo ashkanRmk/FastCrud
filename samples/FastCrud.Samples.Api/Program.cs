@@ -70,6 +70,8 @@ app.UseSwaggerUI();
 
 app.MapAuditLogs<AuditEntry, AppDbContext>(
     "/api/audit-logs",
+    includeEntities: null,
+    excludeEntities: null,
     tagName: nameof(AuditEntry),
     groupName: "v1"
 );

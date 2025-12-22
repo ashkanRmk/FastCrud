@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
     <PackageReference Include="Swashbuckle.AspNetCore" />
     <PackageReference Include="FluentValidation" />
   </ItemGroup>
