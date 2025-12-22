@@ -1,4 +1,4 @@
-﻿using FastCrud.Core.DI;
+using FastCrud.Core.DI;
 using FastCrud.Mapping.Mapster.DI;
 using FastCrud.Persistence.EFCore;
 using FastCrud.Persistence.EFCore.DI;
@@ -68,7 +68,7 @@ using (var scope = app.Services.CreateScope())
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.MapAuditLogs<AuditEntry>(
+app.MapAuditLogs<AuditEntry, AppDbContext>(
     "/api/audit-logs",
     tagName: nameof(AuditEntry),
     groupName: "v1"
