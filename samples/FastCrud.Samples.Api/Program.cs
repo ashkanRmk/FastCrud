@@ -1,4 +1,4 @@
-using FastCrud.Core.DI;
+﻿using FastCrud.Core.DI;
 using FastCrud.Mapping.Mapster.DI;
 using FastCrud.Persistence.EFCore;
 using FastCrud.Persistence.EFCore.DI;
@@ -19,8 +19,7 @@ builder.Services.AddEfAuditing<AppDbContext, AuditEntry>();
 builder.Services.AddDbContext<AppDbContext>((serviceProvider, options) =>
 {
     options.UseInMemoryDatabase("fastcrud-demo");
-    var auditInterceptor = serviceProvider.GetRequiredService<EntityAuditingInterceptor<AuditEntry>>();
-    options.AddInterceptors(auditInterceptor);
+    options.AddInterceptors(serviceProvider.GetRequiredService<EntityAuditingInterceptor<AuditEntry>>());
 });
 
 // FastCrud core services

@@ -10,8 +10,7 @@ public class CrudService<TAgg, TId, TCreateDto, TUpdateDto>(
     IObjectMapper mapper,
     IEnumerable<IModelValidator<TAgg>> validators,
     IServiceProvider serviceProvider,
-    IQueryEngine queryEngine,
-    IAuditService? auditService = null)
+    IQueryEngine queryEngine)
     : ICrudService<TAgg, TId, TCreateDto, TUpdateDto>
 {
     public async Task<OpResult<TAgg>> CreateAsync(TCreateDto input, CancellationToken cancellationToken)
@@ -29,11 +28,6 @@ public class CrudService<TAgg, TId, TCreateDto, TUpdateDto>(
         await repository.AddAsync(entity, cancellationToken);
         await repository.SaveChangesAsync(cancellationToken);
 
-        if (auditService != null)
-        {
-            await auditService.LogAsync(entity, AuditAction.Create, newValues: entity, cancellationToken: cancellationToken);
-        }
-
         return new OpResult<TAgg>(true, string.Empty, entity);
     }
 
@@ -41,11 +35,6 @@ public class CrudService<TAgg, TId, TCreateDto, TUpdateDto>(
     {
         var entity = await repository.FindAsync(id, cancellationToken);
         if (entity is null) return;
-
-        if (auditService != null)
-        {
-            await auditService.LogAsync(entity, AuditAction.Delete, oldValues: entity, cancellationToken: cancellationToken);
-        }
 
         await repository.DeleteAsync(entity, cancellationToken);
         await repository.SaveChangesAsync(cancellationToken);
@@ -66,8 +55,6 @@ public class CrudService<TAgg, TId, TCreateDto, TUpdateDto>(
         var entity = await repository.FindAsync(id, ct)
                     ?? throw new InvalidOperationException($"{typeof(TAgg).Name} with id {id} not found");
 
-        TAgg? oldValues = auditService != null ? CloneEntity(entity) : default;
-
         mapper.Map(input, entity);
 
         var (ok, message) = await ValidateModelAsync(entity, ct);
@@ -75,24 +62,7 @@ public class CrudService<TAgg, TId, TCreateDto, TUpdateDto>(
 
         await repository.SaveChangesAsync(ct);
 
-        if (auditService != null && oldValues != null)
-        {
-            await auditService.LogAsync(entity, AuditAction.Update, oldValues: oldValues, newValues: entity, cancellationToken: ct);
-        }
-
         return new OpResult<TAgg>(true, string.Empty, entity);
-    }
-
-    private TAgg? CloneEntity(TAgg entity)
-    {
-        try
-        {
-            return mapper.Map<TAgg>(entity);
-        }
-        catch
-        {
-            return default;
-        }
     }
 
     private async Task<(bool ok, string message)> ValidateModelAsync(

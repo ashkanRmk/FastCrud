@@ -12,11 +12,6 @@ public static class AuditServiceCollectionExtensions
     {
         services.AddScoped<IAuditUserProvider, DefaultAuditUserProvider>();
         services.AddScoped<EntityAuditingInterceptor<TAuditEntry>>();
-        services.AddScoped<IAuditService>(sp =>
-            new EfAuditService<TDbContext, TAuditEntry>(
-                sp.GetRequiredService<TDbContext>(),
-                sp.GetRequiredService<IAuditUserProvider>()));
-
         services.AddScoped<IAuditQueryService<TAuditEntry>>(sp =>
             new EfAuditQueryService<TAuditEntry>(sp.GetRequiredService<TDbContext>()));
 
@@ -40,15 +35,16 @@ public static class AuditServiceCollectionExtensions
         }
 
         services.AddScoped<IAuditUserProvider, DefaultAuditUserProvider>();
+
         var interceptorType = typeof(EntityAuditingInterceptor<>).MakeGenericType(auditEntryType);
         services.AddScoped(interceptorType);
 
-        services.AddScoped<IAuditService>(sp =>
+        var queryServiceInterface = typeof(IAuditQueryService<>).MakeGenericType(auditEntryType);
+        var queryServiceType = typeof(EfAuditQueryService<>).MakeGenericType(auditEntryType);
+        services.AddScoped(queryServiceInterface, sp =>
         {
-            var auditServiceType = typeof(EfAuditService<,>).MakeGenericType(typeof(TDbContext), auditEntryType);
-            return (IAuditService)Activator.CreateInstance(auditServiceType,
-                sp.GetRequiredService<TDbContext>(),
-                sp.GetRequiredService<IAuditUserProvider>())!;
+            var dbContext = sp.GetRequiredService<TDbContext>();
+            return Activator.CreateInstance(queryServiceType, dbContext)!;
         });
 
         return services;

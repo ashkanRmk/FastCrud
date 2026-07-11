@@ -1,6 +1,7 @@
 using FastCrud.Abstractions.Abstractions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using System.Reflection;
 
@@ -28,9 +29,10 @@ public static class AuditEndpointExtensions
 
         group.MapGet("/", async (
             IAuditQueryService<TAuditEntry> auditService,
-            CancellationToken ct) =>
+            CancellationToken ct,
+            [FromQuery] int count = 100) =>
         {
-            var result = await auditService.GetRecentAuditLogsAsync(100, ct);
+            var result = await auditService.GetRecentAuditLogsAsync(count, ct);
             return Results.Ok(result);
         });
 
@@ -41,9 +43,10 @@ public static class AuditEndpointExtensions
             var entityRoute = $"/{entityName.ToLowerInvariant()}";
             group.MapGet(entityRoute, async (
                 IAuditQueryService<TAuditEntry> auditService,
-                CancellationToken ct) =>
+                CancellationToken ct,
+                [FromQuery] int count = 100) =>
             {
-                var result = await auditService.GetAuditLogsByEntityAsync(entityName, 100, ct);
+                var result = await auditService.GetAuditLogsByEntityAsync(entityName, count, ct);
                 return Results.Ok(result);
             })
             .WithName($"GetAuditLogsFor{entityName}");

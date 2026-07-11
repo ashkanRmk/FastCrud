@@ -1,4 +1,4 @@
-﻿using FastCrud.Abstractions.Abstractions;
+using FastCrud.Abstractions.Abstractions;
 using FastCrud.Abstractions.Primitives;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -48,7 +48,6 @@ public sealed class EntityAuditingInterceptor<TAuditEntry> : SaveChangesIntercep
                 {
                     auditEntries.Add(auditEntry);
                 }
-                UpdateAuditableFields(entry, user);
             }
 
             if (auditEntries.Any())
@@ -122,26 +121,6 @@ public sealed class EntityAuditingInterceptor<TAuditEntry> : SaveChangesIntercep
         catch
         {
             return null;
-        }
-    }
-
-    private static void UpdateAuditableFields(EntityEntry entry, (string? UserId, string? UserName) user)
-    {
-        if (entry.Entity is not IAuditable auditable) return;
-
-        var now = DateTime.UtcNow;
-        var userName = user.UserName ?? user.UserId ?? "System";
-
-        switch (entry.State)
-        {
-            case EntityState.Added:
-                auditable.CreatedAt = now;
-                auditable.CreatedBy = userName;
-                break;
-            case EntityState.Modified:
-                auditable.UpdatedAt = now;
-                auditable.UpdatedBy = userName;
-                break;
         }
     }
 
